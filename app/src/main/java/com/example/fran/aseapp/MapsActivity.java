@@ -108,7 +108,7 @@ public class MapsActivity extends FragmentActivity implements OnMapReadyCallback
 
     @Override
     public void onConnectionSuspended(int i) {
-
+        Toast.makeText(this, "connection suspended", Toast.LENGTH_LONG).show();
     }
 
     @Override
@@ -140,7 +140,7 @@ public class MapsActivity extends FragmentActivity implements OnMapReadyCallback
 
     @Override
     public void onConnectionFailed(ConnectionResult connectionResult) {
-
+        Toast.makeText(this, "connection failed", Toast.LENGTH_LONG).show();
     }
 
     public static final int MY_PERMISSIONS_REQUEST_LOCATION = 99;
