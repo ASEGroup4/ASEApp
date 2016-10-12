@@ -38,6 +38,13 @@ public class MapsActivity extends FragmentActivity implements OnMapReadyCallback
     Marker mCurrLocationMarker;
     LocationRequest mLocationRequest;
 
+	Context context = getApplicationContext();
+	CharSequence text = "HELLO FUCK";
+	int duration = Toast.LENGTH_SHORT;
+	
+	Toast.toast = Toast.makeText(context, text, duration);
+	toast.show();
+	
     @Override
     protected void onCreate(Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
