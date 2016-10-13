@@ -1,5 +1,6 @@
 package com.example.fran.aseapp;
 
+import android.content.Context;
 import android.widget.Toast;
 
 
@@ -43,7 +44,7 @@ public class MapsActivity extends FragmentActivity implements OnMapReadyCallback
 	// checkWifi() checks if wifi is enabled
     public Boolean checkWifi(){		
 	WifiManager wifi = (WifiManager)getSystemService(Context.WIFI_SERVICE);
-	if(wifi.isWifiEnabled(){
+	if(wifi.isWifiEnabled()) {
 		return true;
 	}
 	return false;
@@ -65,10 +66,13 @@ public class MapsActivity extends FragmentActivity implements OnMapReadyCallback
 
 	@Override
 	protected void onResume(){
-		if(!checkWifi()){
+        super.onResume(); // this line calls the super of onResume and doesn't crash
+		/*       these lines make the app crash
+        if(!checkWifi()){
 			//Log.i("testing if wifi is on\n");
 			Toast.makeText(this, "Please Enable Wifi", Toast.LENGTH_LONG).show();
 		}
+		*/
 	}
 	
     /**
