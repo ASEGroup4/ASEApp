@@ -67,12 +67,12 @@ public class MapsActivity extends FragmentActivity implements OnMapReadyCallback
 	@Override
 	protected void onResume(){
         super.onResume(); // this line calls the super of onResume and doesn't crash
-		/*       these lines make the app crash
+		
         if(!checkWifi()){
 			//Log.i("testing if wifi is on\n");
 			Toast.makeText(this, "Please Enable Wifi", Toast.LENGTH_LONG).show();
 		}
-		*/
+		
 	}
 	
     /**
