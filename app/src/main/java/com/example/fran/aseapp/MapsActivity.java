@@ -40,8 +40,8 @@ public class MapsActivity extends FragmentActivity implements OnMapReadyCallback
     LocationRequest mLocationRequest;
 
 	
-	
-    public bool checkWifi(){
+	// checkWifi() checks if wifi is enabled
+    public Boolean checkWifi(){		
 	WifiManager wifi = (WifiManager)getSystemService(Context.WIFI_SERVICE);
 	if(wifi.isWifiEnabled(){
 		return true;
@@ -57,16 +57,20 @@ public class MapsActivity extends FragmentActivity implements OnMapReadyCallback
         if (android.os.Build.VERSION.SDK_INT >= Build.VERSION_CODES.M) {
             checkLocationPermission();
         }
-	if(!checkWifi()){
-		Toast.makeText(this, "Please Enable Wifi", Toast.LENGTH_LONG).show();
-	}
         // Obtain the SupportMapFragment and get notified when the map is ready to be used.
         SupportMapFragment mapFragment = (SupportMapFragment) getSupportFragmentManager()
                 .findFragmentById(R.id.map);
         mapFragment.getMapAsync(this);
     }
 
-
+	@Override
+	protected void onResume(){
+		if(!checkWifi()){
+			//Log.i("testing if wifi is on\n");
+			Toast.makeText(this, "Please Enable Wifi", Toast.LENGTH_LONG).show();
+		}
+	}
+	
     /**
      * Manipulates the map once available.
      * This callback is triggered when the map is ready to be used.
