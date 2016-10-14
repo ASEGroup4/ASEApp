@@ -2,7 +2,7 @@
 <html>
 <body>
 
-<h1> Page </h1>
+<h1> PHP Generated Page </h1>
 
 <?php
 
@@ -31,14 +31,40 @@ $connection = new mysqli($GLOBALS['servername'], $GLOBALS['username'], $GLOBALS[
 	$connection->close();
 }
 
+function buildPage(){
+	#$connection = new mysqli($GLOBALS['servername'], $GLOBALS['username'], $GLOBALS['password'], $GLOBALS['dbname']);
+	
+	$connection = mysql_connect($GLOBALS['servername'], $GLOBALS['username'], $GLOBALS['password']);
+	if(!$connection){
+		echo "Connection Error";
+	}
+	$query = "SELECT * FROM test";
+	mysql_select_db('sl410');
+	$retval = mysql_query($query, $connection);
+	
+	if(!$retval){
+		echo "could not get data";
+	}
+	echo "TABLE<br>";
+	echo "--------------------------------------<br>";
+	while($row = mysql_fetch_array($retval, MYSQL_ASSOC)){
+		echo 	"| NAME : {$row['name']}<br>".
+				"|  ID :     {$row['id']} <br>".
+				"--------------------------------------<br>";
+	}
+	echo "Fetched data successfully\n";
+	
+	mysql_close($connection);
+}
 
 if($_SERVER["REQUEST_METHOD"] == "POST"){
 	$name = $_REQUEST['name'];
 	SQLinsert($_REQUEST['name'], $_REQUEST['id']);
 }else{
-	echo "no post request made";
+	#echo "no post request made";
 }
 
+buildPage();
 
 ?>
 </body>
