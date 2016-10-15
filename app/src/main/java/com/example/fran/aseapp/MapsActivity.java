@@ -1,7 +1,9 @@
 package com.example.fran.aseapp;
 
+import android.content.Context;
 import android.widget.Toast;
 
+import android.provider.Settings.Secure;
 
 import android.Manifest;
 import android.content.pm.PackageManager;
@@ -12,6 +14,7 @@ import android.support.v4.app.FragmentActivity;
 import android.os.Bundle;
 import android.support.v4.content.ContextCompat;
 import android.widget.Toast;
+import android.net.wifi.WifiManager;
 
 import com.google.android.gms.common.ConnectionResult;
 import com.google.android.gms.common.api.GoogleApiClient;
@@ -38,6 +41,16 @@ public class MapsActivity extends FragmentActivity implements OnMapReadyCallback
     Marker mCurrLocationMarker;
     LocationRequest mLocationRequest;
 
+	
+	// checkWifi() checks if wifi is enabled
+    public Boolean checkWifi(){		
+	WifiManager wifi = (WifiManager)getSystemService(Context.WIFI_SERVICE);
+	if(wifi.isWifiEnabled()) {
+		return true;
+	}
+	return false;
+    }
+    
     @Override
     protected void onCreate(Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
@@ -52,7 +65,17 @@ public class MapsActivity extends FragmentActivity implements OnMapReadyCallback
         mapFragment.getMapAsync(this);
     }
 
-
+	@Override
+	protected void onResume(){
+        super.onResume(); // this line calls the super of onResume and doesn't crash
+		
+        if(!checkWifi()){
+			//Log.i("testing if wifi is on\n");
+			Toast.makeText(this, "Please Enable Wifi", Toast.LENGTH_LONG).show();
+		}
+		
+	}
+	
     /**
      * Manipulates the map once available.
      * This callback is triggered when the map is ready to be used.
@@ -93,7 +116,7 @@ public class MapsActivity extends FragmentActivity implements OnMapReadyCallback
 
     @Override
     public void onConnected(Bundle bundle) {
-
+	Toast.makeText(this, "This is a test toast, no idea where it will show up", Toast.LENGTH_LONG).show();
         mLocationRequest = new LocationRequest();
         mLocationRequest.setInterval(1000);
         mLocationRequest.setFastestInterval(1000);
