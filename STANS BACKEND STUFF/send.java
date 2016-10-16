@@ -1,21 +1,35 @@
 import java.net.*;
 import java.io.*;
 
-public class main {
+public class send {
 
 
 
     public static void main(String[] args) throws IOException{
 
-        String name = "testName"; //Change these if you want to make (max 20 chars)
-        String id = "1234";         // max 4 digits
+	
+	String location = "789789789";
+	String userID = "434434434";
+	String time = "2016-10-16 14:21:15";
 
-
-        String urlString = "https://users.sussex.ac.uk/~sl410/php/index.php?name=" + name + "&id=" + id;
+        String urlString = "https://users.sussex.ac.uk/~sl410/php/index.php?location=" + location + "&id=" + userID + "&time=" + time;
 
         URL url = new URL(urlString);
 
+	HttpURLConnection connection = (HttpURLConnection) url.openConnection();
+	
+	try{
+		connection.setDoInput(true);
+		connection.setDoOutput(true);
+		connection.setUseCaches(false);
+		connection.setRequestMethod("POST");
+		connection.setRequestProperty("Conetent-Type", "application/x-www-form-urlencoded");
+	}finally{
+		connection.disconnect();
+	}
+	
 
+	/*
         String result = "";
         String data = "fName=" + URLEncoder.encode("Atli", "UTF-8");
         HttpURLConnection connection = (HttpURLConnection) url.openConnection();
@@ -38,6 +52,7 @@ public class main {
             connection.disconnect();
             System.out.println(result);
         }
+	*/
 
 
     }

@@ -6,7 +6,7 @@
 
 <?php
 
-$servername = "locationdb.cg6ciuaq7qev.us-west-2.rds.amazonaws.com:3396";
+$servername = "locationdb.cg6ciuaq7qev.us-west-2.rds.amazonaws.com";
 $username = "admin";
 $password = "asegroup4";
 $dbname = "locationdb";
