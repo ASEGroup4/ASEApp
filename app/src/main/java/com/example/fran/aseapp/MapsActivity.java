@@ -1,6 +1,9 @@
 package com.example.fran.aseapp;
 
+import android.app.AlertDialog;
+import android.app.Dialog;
 import android.content.Context;
+import android.content.DialogInterface;
 import android.icu.text.SimpleDateFormat;
 import android.icu.util.Calendar;
 import android.support.annotation.RequiresApi;
@@ -77,13 +80,31 @@ public class MapsActivity extends FragmentActivity implements OnMapReadyCallback
 		
         if(!checkWifi()){
 			//Log.i("testing if wifi is on\n");
-			Toast.makeText(this, "Please Enable Wifi", Toast.LENGTH_LONG).show();
+			//Toast.makeText(this, "Please Enable Wifi", Toast.LENGTH_LONG).show();
+            AlertDialog.Builder builder = new AlertDialog.Builder(this);
+            builder.setTitle("Wifi not enabled");
+            builder.setMessage("Enable Wifi?");
+            builder.setPositiveButton("OK", new DialogInterface.OnClickListener() {
+                @Override
+                public void onClick(DialogInterface dialog, int which) {
+                    WifiManager wifi = (WifiManager) getSystemService(Context.WIFI_SERVICE);
+                    wifi.setWifiEnabled(true);
+                }
+            });
+            builder.setNegativeButton("Dismiss", new DialogInterface.OnClickListener() {
+                @Override
+                public void onClick(DialogInterface dialog, int which) {
+                    // dismiss
+                }
+            });
+            AlertDialog dialog = builder.create();
+            dialog.show();
 		}
 
         Calendar c = Calendar.getInstance();
-        SimpleDateFormat sdf = new SimpleDateFormat("dd:MMMM:yyyy HH:mm:ss");
+        SimpleDateFormat sdf = new SimpleDateFormat("dd/mm/yyyy hh:mm:ss");
         String strDate = sdf.format(c.getTime());
-        Toast.makeText(this, strDate, Toast.LENGTH_LONG).show();
+        Toast.makeText(this, strDate, Toast.LENGTH_SHORT).show();
 		
 	}
 	
