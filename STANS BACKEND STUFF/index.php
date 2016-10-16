@@ -21,18 +21,23 @@ $connection = new mysqli($GLOBALS['servername'], $GLOBALS['username'], $GLOBALS[
 		echo "Connection Error";
 	}
 	#$query = "INSERT INTO test VALUES ('" . $name . "'," . $id . ")";
-	$query = "INSERT IGNORE Users SET UserID = " . &UserID . ";"
-		. "INSERT INTO Locations VALUES (" . $Location . "," . $UserID . "," . $Time . ");";
 	
-	if($connection->query($query) === TRUE){
-		echo "New record Created";
-	}else{
-		echo "ERROR: " . $query . "<br>" . $connection->error;
+	$query1 = "INSERT IGNORE Users SET UserID = " . $UserID;
+	
+	if($connection->query($query1) === TRUE){
+		echo "USER ADDED";
+	}
+
+	$query2 = "INSERT INTO Locations VALUES(" . $Location . "," . $UserID . ",'" . $Time . "')";
+	
+	if($connection->query($query2) == TRUE){
+		echo "LOCAITON LOGGED";
 	}
 	
 	$connection->close();
 }
 
+/*
 function buildPage(){
 	#$connection = new mysqli($GLOBALS['servername'], $GLOBALS['username'], $GLOBALS['password'], $GLOBALS['dbname']);
 	
@@ -59,7 +64,7 @@ function buildPage(){
 	
 	mysql_close($connection);
 }
-
+*/
 if($_SERVER["REQUEST_METHOD"] == "POST"){
 	#$Location = $_REQUEST['name'];
 	SQLinsert($_REQUEST['location'], $_REQUEST['id'], $_REQUEST['time']);
@@ -67,7 +72,7 @@ if($_SERVER["REQUEST_METHOD"] == "POST"){
 	#echo "no post request made";
 }
 
-buildPage();
+#buildPage();
 
 ?>
 </body>
