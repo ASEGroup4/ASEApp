@@ -6,30 +6,37 @@
 
 <?php
 
-$servername = "mysql.student.sussex.ac.uk";
-$username = "sl410";
-$password = "tempSQLpass";
-$dbname = "sl410";
+$servername = "locationdb.cg6ciuaq7qev.us-west-2.rds.amazonaws.com";
+$username = "admin";
+$password = "asegroup4";
+$dbname = "locationdb";
 
 $connection = null;
 
 
-function SQLinsert($name, $id){
+function SQLinsert($Location, $UserID, $Time){
 	
 $connection = new mysqli($GLOBALS['servername'], $GLOBALS['username'], $GLOBALS['password'], $GLOBALS['dbname']);
 	if($connection->connect_error){
 		echo "Connection Error";
 	}
-	$query = "INSERT INTO test VALUES ('" . $name . "'," . $id . ")";
+	#$query = "INSERT INTO test VALUES ('" . $name . "'," . $id . ")";
 	
-	if($connection->query($query) === TRUE){
-		echo "New record Created";
-	}else{
-		echo "ERROR: " . $query . "<br>" . $connection->error;
+	$query1 = "INSERT IGNORE Users SET UserID = " . $UserID;
+	
+	if($connection->query($query1) === TRUE){
+		echo "USER ADDED";
+	}
+
+	$query2 = "INSERT INTO Locations VALUES(" . $Location . "," . $UserID . ",'" . $Time . "')";
+	
+	if($connection->query($query2) == TRUE){
+		echo "LOCAITON LOGGED";
 	}
 	
 	$connection->close();
 }
+
 
 function buildPage(){
 	#$connection = new mysqli($GLOBALS['servername'], $GLOBALS['username'], $GLOBALS['password'], $GLOBALS['dbname']);
@@ -38,8 +45,8 @@ function buildPage(){
 	if(!$connection){
 		echo "Connection Error";
 	}
-	$query = "SELECT * FROM test";
-	mysql_select_db('sl410');
+	$query = "SELECT * FROM Locations";
+	mysql_select_db('locationdb');
 	$retval = mysql_query($query, $connection);
 	
 	if(!$retval){
@@ -48,8 +55,9 @@ function buildPage(){
 	echo "TABLE<br>";
 	echo "--------------------------------------<br>";
 	while($row = mysql_fetch_array($retval, MYSQL_ASSOC)){
-		echo 	"| NAME : {$row['name']}<br>".
-				"|  ID :     {$row['id']} <br>".
+		echo 	"| USER ID : {$row['UserID']}<br>".
+				"|  LOCATION :     {$row['Location']} <br>".
+				"|  TIME :         {$row['Time']} <br>" .
 				"--------------------------------------<br>";
 	}
 	echo "Fetched data successfully\n";
@@ -58,8 +66,8 @@ function buildPage(){
 }
 
 if($_SERVER["REQUEST_METHOD"] == "POST"){
-	$name = $_REQUEST['name'];
-	SQLinsert($_REQUEST['name'], $_REQUEST['id']);
+	#$Location = $_REQUEST['name'];
+	SQLinsert($_REQUEST['location'], $_REQUEST['id'], $_REQUEST['time']);
 }else{
 	#echo "no post request made";
 }
