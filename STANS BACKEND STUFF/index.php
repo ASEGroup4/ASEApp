@@ -40,7 +40,7 @@ function buildPage(){
 	if(!$connection){
 		echo "Connection Error";
 	}
-	$query = "SELECT * FROM test";
+	$query = "SELECT * FROM Locations";
 	mysql_select_db('sl410');
 	$retval = mysql_query($query, $connection);
 	
@@ -50,8 +50,9 @@ function buildPage(){
 	echo "TABLE<br>";
 	echo "--------------------------------------<br>";
 	while($row = mysql_fetch_array($retval, MYSQL_ASSOC)){
-		echo 	"| NAME : {$row['name']}<br>".
-				"|  ID :     {$row['id']} <br>".
+		echo 	"| USER ID : {$row['UserID']}<br>".
+				"|  LOCATION :     {$row['Location']} <br>".
+				"|  TIME :         {$row['Time']} <br>" .
 				"--------------------------------------<br>";
 	}
 	echo "Fetched data successfully\n";
