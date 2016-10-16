@@ -37,7 +37,7 @@ $connection = new mysqli($GLOBALS['servername'], $GLOBALS['username'], $GLOBALS[
 	$connection->close();
 }
 
-/*
+
 function buildPage(){
 	#$connection = new mysqli($GLOBALS['servername'], $GLOBALS['username'], $GLOBALS['password'], $GLOBALS['dbname']);
 	
@@ -46,7 +46,7 @@ function buildPage(){
 		echo "Connection Error";
 	}
 	$query = "SELECT * FROM Locations";
-	mysql_select_db('sl410');
+	mysql_select_db('locationdb');
 	$retval = mysql_query($query, $connection);
 	
 	if(!$retval){
@@ -64,7 +64,7 @@ function buildPage(){
 	
 	mysql_close($connection);
 }
-*/
+
 if($_SERVER["REQUEST_METHOD"] == "POST"){
 	#$Location = $_REQUEST['name'];
 	SQLinsert($_REQUEST['location'], $_REQUEST['id'], $_REQUEST['time']);
@@ -72,7 +72,7 @@ if($_SERVER["REQUEST_METHOD"] == "POST"){
 	#echo "no post request made";
 }
 
-#buildPage();
+buildPage();
 
 ?>
 </body>
