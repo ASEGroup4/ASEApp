@@ -1,6 +1,9 @@
 package com.example.fran.aseapp;
 
 import android.content.Context;
+import android.icu.text.SimpleDateFormat;
+import android.icu.util.Calendar;
+import android.support.annotation.RequiresApi;
 import android.widget.Toast;
 
 import android.provider.Settings.Secure;
@@ -50,6 +53,8 @@ public class MapsActivity extends FragmentActivity implements OnMapReadyCallback
 	}
 	return false;
     }
+
+
     
     @Override
     protected void onCreate(Bundle savedInstanceState) {
@@ -65,7 +70,8 @@ public class MapsActivity extends FragmentActivity implements OnMapReadyCallback
         mapFragment.getMapAsync(this);
     }
 
-	@Override
+	@RequiresApi(api = Build.VERSION_CODES.N)
+    @Override
 	protected void onResume(){
         super.onResume(); // this line calls the super of onResume and doesn't crash
 		
@@ -73,6 +79,11 @@ public class MapsActivity extends FragmentActivity implements OnMapReadyCallback
 			//Log.i("testing if wifi is on\n");
 			Toast.makeText(this, "Please Enable Wifi", Toast.LENGTH_LONG).show();
 		}
+
+        Calendar c = Calendar.getInstance();
+        SimpleDateFormat sdf = new SimpleDateFormat("dd:MMMM:yyyy HH:mm:ss");
+        String strDate = sdf.format(c.getTime());
+        Toast.makeText(this, strDate, Toast.LENGTH_LONG).show();
 		
 	}
 	
