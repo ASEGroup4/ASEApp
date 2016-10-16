@@ -6,21 +6,23 @@
 
 <?php
 
-$servername = "mysql.student.sussex.ac.uk";
-$username = "sl410";
-$password = "tempSQLpass";
-$dbname = "sl410";
+$servername = "locationdb.cg6ciuaq7qev.us-west-2.rds.amazonaws.com:3396";
+$username = "admin";
+$password = "asegroup4";
+$dbname = "locationdb";
 
 $connection = null;
 
 
-function SQLinsert($name, $id){
+function SQLinsert($Location, $UserID, $Time){
 	
 $connection = new mysqli($GLOBALS['servername'], $GLOBALS['username'], $GLOBALS['password'], $GLOBALS['dbname']);
 	if($connection->connect_error){
 		echo "Connection Error";
 	}
-	$query = "INSERT INTO test VALUES ('" . $name . "'," . $id . ")";
+	#$query = "INSERT INTO test VALUES ('" . $name . "'," . $id . ")";
+	$query = "INSERT IGNORE Users SET UserID = " . &UserID . ";"
+		. "INSERT INTO Locations VALUES (" . $Location . "," . $UserID . "," . $Time . ");";
 	
 	if($connection->query($query) === TRUE){
 		echo "New record Created";
@@ -58,8 +60,8 @@ function buildPage(){
 }
 
 if($_SERVER["REQUEST_METHOD"] == "POST"){
-	$name = $_REQUEST['name'];
-	SQLinsert($_REQUEST['name'], $_REQUEST['id']);
+	#$Location = $_REQUEST['name'];
+	SQLinsert($_REQUEST['location'], $_REQUEST['id'], $_REQUEST['time']);
 }else{
 	#echo "no post request made";
 }
