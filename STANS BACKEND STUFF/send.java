@@ -8,14 +8,16 @@ public class send {
     public static void main(String[] args) throws IOException{
 
 	
-	String location = "789789789";
-	String userID = "434434434";
+	String location = "808080808";
+	String userID = "222222222";
 	String time = "2016-10-16 14:21:15";
 
-        String urlString = "https://users.sussex.ac.uk/~sl410/php/index.php?location=" + location + "&id=" + userID + "&time=" + time;
+        String urlString = "http://52.43.0.162/asegroup4/index.php?location=" + location + "&id=" + userID + "&time=" + time;
 
         URL url = new URL(urlString);
-
+	
+	/*
+	String data = "fName=" + URLEncoder.encode("Atli", "UTF-8");
 	HttpURLConnection connection = (HttpURLConnection) url.openConnection();
 	
 	try{
@@ -27,9 +29,8 @@ public class send {
 	}finally{
 		connection.disconnect();
 	}
+	*/
 	
-
-	/*
         String result = "";
         String data = "fName=" + URLEncoder.encode("Atli", "UTF-8");
         HttpURLConnection connection = (HttpURLConnection) url.openConnection();
@@ -52,7 +53,7 @@ public class send {
             connection.disconnect();
             System.out.println(result);
         }
-	*/
+	
 
 
     }
