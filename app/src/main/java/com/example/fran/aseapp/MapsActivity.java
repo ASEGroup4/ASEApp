@@ -1,12 +1,16 @@
 package com.example.fran.aseapp;
 
+import android.app.AlarmManager;
 import android.app.AlertDialog;
 import android.app.Dialog;
+import android.app.PendingIntent;
 import android.content.Context;
 import android.content.DialogInterface;
+import android.content.Intent;
 import android.icu.text.SimpleDateFormat;
 import android.icu.util.Calendar;
 import android.support.annotation.RequiresApi;
+import android.view.View;
 import android.widget.Toast;
 
 import android.provider.Settings.Secure;
@@ -43,12 +47,16 @@ public class MapsActivity extends FragmentActivity implements OnMapReadyCallback
 
     private GoogleMap mMap;
     GoogleApiClient mGoogleApiClient;
-    Location mLastLocation;
+    static Location mLastLocation;
     Marker mCurrLocationMarker;
     LocationRequest mLocationRequest;
 
-	
-	// checkWifi() checks if wifi is enabled
+
+    private PendingIntent pendingIntent;
+    private AlarmManager manager;
+
+
+    // checkWifi() checks if wifi is enabled
     public Boolean checkWifi(){		
 	WifiManager wifi = (WifiManager)getSystemService(Context.WIFI_SERVICE);
 	if(wifi.isWifiEnabled()) {
@@ -71,7 +79,11 @@ public class MapsActivity extends FragmentActivity implements OnMapReadyCallback
         SupportMapFragment mapFragment = (SupportMapFragment) getSupportFragmentManager()
                 .findFragmentById(R.id.map);
         mapFragment.getMapAsync(this);
+
+
     }
+
+
 
 	@RequiresApi(api = Build.VERSION_CODES.N)
     @Override
@@ -135,6 +147,7 @@ public class MapsActivity extends FragmentActivity implements OnMapReadyCallback
             buildGoogleApiClient();
             mMap.setMyLocationEnabled(true);
         }
+        startAlarm();
     }
 
     protected synchronized void buildGoogleApiClient() {
@@ -262,6 +275,19 @@ public class MapsActivity extends FragmentActivity implements OnMapReadyCallback
             // other 'case' lines to check for other permissions this app might request.
             // You can add here other case statements according to your requirement.
         }
+    }
+
+    public void startAlarm() {
+        manager = (AlarmManager)getSystemService(Context.ALARM_SERVICE);
+        int interval = 30000;
+        int passing =1;
+
+        Intent alarmIntent = new Intent(this, AlarmReceiver.class);
+        alarmIntent.putExtra("location", Integer.toString(passing++));
+        pendingIntent = PendingIntent.getBroadcast(this, 0, alarmIntent, 0);
+
+        manager.setRepeating(AlarmManager.RTC_WAKEUP, System.currentTimeMillis(), interval, pendingIntent);
+        Toast.makeText(this, "Alarm Set", Toast.LENGTH_SHORT).show();
     }
 }
 
