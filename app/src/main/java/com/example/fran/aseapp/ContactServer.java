@@ -10,7 +10,7 @@ import android.widget.Toast;
 import android.provider.Settings.Secure;
 import java.net.*;
 import java.io.*;
-
+import java.util.Date;
 /**
  * Created by Lucas on 16/10/16.
  */
@@ -37,12 +37,12 @@ public class ContactServer extends IntentService  {
 
 
         Calendar c = Calendar.getInstance();
-        SimpleDateFormat sdf = new SimpleDateFormat("dd/mm/yyyy hh:mm:ss");
+        SimpleDateFormat sdf = new SimpleDateFormat("yyyy-MM-dd HH:mm:ss");
         String strDate = sdf.format(c.getTime());
 
 
 
-        String urlString = "http://52.43.0.162/asegroup4/index.php?locationLat=" + locationLat + "&locationLong=" + locationLong+"&id=" + android_id + "&time=" + strDate;
+        String urlString = "http://52.42.135.245/asegroup4/index.php?locationLat=" + locationLat + "&locationLong=" + locationLong+"&id=" + android_id + "&time=" + strDate;
         try {
             URL url = new URL(urlString);
 
