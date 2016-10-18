@@ -34,16 +34,12 @@ $connection = new mysqli($GLOBALS['servername'], $GLOBALS['username'], $GLOBALS[
 	
 	$connection->close();
 }
-
 if($_SERVER["REQUEST_METHOD"] == "POST"){
 	#$Location = $_REQUEST['name'];
 	SQLinsert($_REQUEST['locationLat'],$_REQUEST['locationLong'], $_REQUEST['id'], $_REQUEST['time']);
 }else{
 	#echo "no post request made";
 }
-
-
-
 function buildPage(){
 	#$connection = new mysqli($GLOBALS['servername'], $GLOBALS['username'], $GLOBALS['password'], $GLOBALS['dbname']);
 	
@@ -61,11 +57,15 @@ function buildPage(){
 	echo "TABLE<br>";
 	echo "--------------------------------------<br>";
 	while($row = mysql_fetch_array($retval, MYSQL_ASSOC)){
+		
+		
+		$maplink = "https://www.google.co.uk/maps/place/50%C2%B050'21.4%22N+0%C2%B007'00.6%22W/@" . "{$row['LocationLat']}" . "," . "{$row['LocationLong']}". "17z/data=!3m1!4b1!4m5!3m4!1s0x0:0x0!8m2!3d50.8392746!4d-0.1168388";
+		
 		echo 	"| USER ID : {$row['UserID']}<br>".
 				"|  LOCATION_LAT  :     {$row['LocationLat']} <br>".
 				"|  LOCATION_LONG :	{$row['LocationLong']}<br>".
-				"|  USER_ID       :	{$row['UserID']}<br>"/.
 				"|  TIME :         {$row['Time']} <br>" .
+				"|  <a href =" . $maplink . ">SEE ON MAP</a><br>" .
 				"--------------------------------------<br>";
 	}
 	echo "Fetched data successfully\n";
