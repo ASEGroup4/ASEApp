@@ -41,8 +41,8 @@ if($_SERVER["REQUEST_METHOD"] == "POST"){
 }else{
 	#echo "no post request made";
 }
-/*
-buildPage();
+
+
 
 function buildPage(){
 	#$connection = new mysqli($GLOBALS['servername'], $GLOBALS['username'], $GLOBALS['password'], $GLOBALS['dbname']);
@@ -62,7 +62,9 @@ function buildPage(){
 	echo "--------------------------------------<br>";
 	while($row = mysql_fetch_array($retval, MYSQL_ASSOC)){
 		echo 	"| USER ID : {$row['UserID']}<br>".
-				"|  LOCATION :     {$row['Location']} <br>".
+				"|  LOCATION_LAT  :     {$row['LocationLat']} <br>".
+				"|  LOCATION_LONG :	{$row['LocationLong']}<br>".
+				"|  USER_ID       :	{$row['UserID']}<br>"/.
 				"|  TIME :         {$row['Time']} <br>" .
 				"--------------------------------------<br>";
 	}
@@ -70,7 +72,7 @@ function buildPage(){
 	
 	mysql_close($connection);
 }
-*/
+buildPage();
 ?>
 </body>
 </html>
