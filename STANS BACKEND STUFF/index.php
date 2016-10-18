@@ -5,30 +5,28 @@
 <h1> PHP Generated Page </h1>
 
 <?php
-
 $servername = "locationdb.cg6ciuaq7qev.us-west-2.rds.amazonaws.com";
 $username = "admin";
 $password = "asegroup4";
 $dbname = "locationdb";
-
 $connection = null;
-
-
-function SQLinsert($Location, $UserID, $Time){
-	
+function SQLinsert($LocationLat,$LocationLong, $UserID, $Time){
+	echo "LocationLat: $LocationLat";
+	echo "LocationLong: $LocationLong";
+	echo "User ID:  $UserID";
+	echo "Time: $Time";
 $connection = new mysqli($GLOBALS['servername'], $GLOBALS['username'], $GLOBALS['password'], $GLOBALS['dbname']);
 	if($connection->connect_error){
 		echo "Connection Error";
 	}
 	#$query = "INSERT INTO test VALUES ('" . $name . "'," . $id . ")";
 	
-	$query1 = "INSERT IGNORE Users SET UserID = " . $UserID;
-	
+	$query1 = "INSERT IGNORE Users SET UserID = '" .$UserID."'";
+	echo "<br> $query1";
 	if($connection->query($query1) === TRUE){
 		echo "USER ADDED";
 	}
-
-	$query2 = "INSERT INTO Locations VALUES(" . $Location . "," . $UserID . ",'" . $Time . "')";
+	$query2 = "INSERT INTO Locations VALUES(" . $LocationLat . "," . $LocationLong . ",'" . $UserID . "','" . $Time . "')";
 	
 	if($connection->query($query2) == TRUE){
 		echo "LOCAITON LOGGED";
@@ -37,6 +35,14 @@ $connection = new mysqli($GLOBALS['servername'], $GLOBALS['username'], $GLOBALS[
 	$connection->close();
 }
 
+if($_SERVER["REQUEST_METHOD"] == "POST"){
+	#$Location = $_REQUEST['name'];
+	SQLinsert($_REQUEST['locationLat'],$_REQUEST['locationLong'], $_REQUEST['id'], $_REQUEST['time']);
+}else{
+	#echo "no post request made";
+}
+/*
+buildPage();
 
 function buildPage(){
 	#$connection = new mysqli($GLOBALS['servername'], $GLOBALS['username'], $GLOBALS['password'], $GLOBALS['dbname']);
@@ -64,16 +70,7 @@ function buildPage(){
 	
 	mysql_close($connection);
 }
-
-if($_SERVER["REQUEST_METHOD"] == "POST"){
-	#$Location = $_REQUEST['name'];
-	SQLinsert($_REQUEST['location'], $_REQUEST['id'], $_REQUEST['time']);
-}else{
-	#echo "no post request made";
-}
-
-buildPage();
-
+*/
 ?>
 </body>
 </html>

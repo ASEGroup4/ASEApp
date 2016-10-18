@@ -1,6 +1,16 @@
 package com.example.fran.aseapp;
 
+import android.app.AlarmManager;
+import android.app.AlertDialog;
+import android.app.Dialog;
+import android.app.PendingIntent;
 import android.content.Context;
+import android.content.DialogInterface;
+import android.content.Intent;
+import android.icu.text.SimpleDateFormat;
+import android.icu.util.Calendar;
+import android.support.annotation.RequiresApi;
+import android.view.View;
 import android.widget.Toast;
 
 import android.provider.Settings.Secure;
@@ -37,12 +47,16 @@ public class MapsActivity extends FragmentActivity implements OnMapReadyCallback
 
     private GoogleMap mMap;
     GoogleApiClient mGoogleApiClient;
-    Location mLastLocation;
+    static Location mLastLocation;
     Marker mCurrLocationMarker;
     LocationRequest mLocationRequest;
 
-	
-	// checkWifi() checks if wifi is enabled
+
+    private PendingIntent pendingIntent;
+    private AlarmManager manager;
+
+
+    // checkWifi() checks if wifi is enabled
     public Boolean checkWifi(){		
 	WifiManager wifi = (WifiManager)getSystemService(Context.WIFI_SERVICE);
 	if(wifi.isWifiEnabled()) {
@@ -50,6 +64,8 @@ public class MapsActivity extends FragmentActivity implements OnMapReadyCallback
 	}
 	return false;
     }
+
+
     
     @Override
     protected void onCreate(Bundle savedInstanceState) {
@@ -63,16 +79,44 @@ public class MapsActivity extends FragmentActivity implements OnMapReadyCallback
         SupportMapFragment mapFragment = (SupportMapFragment) getSupportFragmentManager()
                 .findFragmentById(R.id.map);
         mapFragment.getMapAsync(this);
+
+
     }
 
-	@Override
+
+
+	@RequiresApi(api = Build.VERSION_CODES.N)
+    @Override
 	protected void onResume(){
         super.onResume(); // this line calls the super of onResume and doesn't crash
 		
         if(!checkWifi()){
 			//Log.i("testing if wifi is on\n");
-			Toast.makeText(this, "Please Enable Wifi", Toast.LENGTH_LONG).show();
+			//Toast.makeText(this, "Please Enable Wifi", Toast.LENGTH_LONG).show();
+            AlertDialog.Builder builder = new AlertDialog.Builder(this);
+            builder.setTitle("Wifi not enabled");
+            builder.setMessage("Enable Wifi?");
+            builder.setPositiveButton("OK", new DialogInterface.OnClickListener() {
+                @Override
+                public void onClick(DialogInterface dialog, int which) {
+                    WifiManager wifi = (WifiManager) getSystemService(Context.WIFI_SERVICE);
+                    wifi.setWifiEnabled(true);
+                }
+            });
+            builder.setNegativeButton("Dismiss", new DialogInterface.OnClickListener() {
+                @Override
+                public void onClick(DialogInterface dialog, int which) {
+                    // dismiss
+                }
+            });
+            AlertDialog dialog = builder.create();
+            dialog.show();
 		}
+
+        Calendar c = Calendar.getInstance();
+        SimpleDateFormat sdf = new SimpleDateFormat("dd/mm/yyyy hh:mm:ss");
+        String strDate = sdf.format(c.getTime());
+        Toast.makeText(this, strDate, Toast.LENGTH_SHORT).show();
 		
 	}
 	
@@ -103,6 +147,7 @@ public class MapsActivity extends FragmentActivity implements OnMapReadyCallback
             buildGoogleApiClient();
             mMap.setMyLocationEnabled(true);
         }
+        startAlarm();
     }
 
     protected synchronized void buildGoogleApiClient() {
@@ -116,7 +161,7 @@ public class MapsActivity extends FragmentActivity implements OnMapReadyCallback
 
     @Override
     public void onConnected(Bundle bundle) {
-	Toast.makeText(this, "This is a test toast, no idea where it will show up", Toast.LENGTH_LONG).show();
+	    //Toast.makeText(this, "This is a test toast, no idea where it will show up", Toast.LENGTH_LONG).show();
         mLocationRequest = new LocationRequest();
         mLocationRequest.setInterval(1000);
         mLocationRequest.setFastestInterval(1000);
@@ -148,7 +193,7 @@ public class MapsActivity extends FragmentActivity implements OnMapReadyCallback
         markerOptions.position(latLng);
         markerOptions.title("Current Position");
         markerOptions.icon(BitmapDescriptorFactory.defaultMarker(BitmapDescriptorFactory.HUE_MAGENTA));
-        mCurrLocationMarker = mMap.addMarker(markerOptions);
+        //mCurrLocationMarker = mMap.addMarker(markerOptions);
 
         //move map camera
         mMap.moveCamera(CameraUpdateFactory.newLatLng(latLng));
@@ -230,6 +275,19 @@ public class MapsActivity extends FragmentActivity implements OnMapReadyCallback
             // other 'case' lines to check for other permissions this app might request.
             // You can add here other case statements according to your requirement.
         }
+    }
+
+    public void startAlarm() {
+        manager = (AlarmManager)getSystemService(Context.ALARM_SERVICE);
+        int interval = 30000;
+        int passing =1;
+
+        Intent alarmIntent = new Intent(this, AlarmReceiver.class);
+        alarmIntent.putExtra("location", Integer.toString(passing++));
+        pendingIntent = PendingIntent.getBroadcast(this, 0, alarmIntent, 0);
+
+        manager.setRepeating(AlarmManager.RTC_WAKEUP, System.currentTimeMillis(), interval, pendingIntent);
+        Toast.makeText(this, "Connected to server", Toast.LENGTH_SHORT).show();
     }
 }
 
