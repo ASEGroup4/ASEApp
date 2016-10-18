@@ -42,7 +42,7 @@ public class ContactServer extends IntentService  {
 
 
 
-        String urlString = "http://54.190.44.242/asegroup4/index.php?locationLat=" + locationLat + "&locationLong=" + locationLong+"&id=" + android_id + "&time=" + strDate;
+        String urlString = "http://user.sussex.ac.uk/~sl410/ase/index.php?locationLat=" + locationLat + "&locationLong=" + locationLong+"&id=" + android_id + "&time=" + strDate;
         try {
             URL url = new URL(urlString);
 
