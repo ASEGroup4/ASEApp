@@ -5,6 +5,8 @@ $password = "asegroup4";
 $dbName = "locationdb";
 $connection = null;
 
+// AppKey to be sent is: 4seGroup4.
+
 if($_SERVER["REQUEST_METHOD"] == "POST")
 	SQLinsert($_REQUEST['AppKey'], $_REQUEST['locationLat'], $_REQUEST['locationLong'], $_REQUEST['id'], $_REQUEST['time']);
 
