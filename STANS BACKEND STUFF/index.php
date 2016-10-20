@@ -1,45 +1,37 @@
-<!DOCTYPE html>
-<html>
-<body>
-
-<h1> PHP Generated Page </h1>
-
 <?php
-$servername = "locationdb.cg6ciuaq7qev.us-west-2.rds.amazonaws.com";
+$serverName = "locationdb.cg6ciuaq7qev.us-west-2.rds.amazonaws.com";
 $username = "admin";
 $password = "asegroup4";
-$dbname = "locationdb";
+$dbName = "locationdb";
 $connection = null;
-function SQLinsert($LocationLat,$LocationLong, $UserID, $Time){
-	echo "LocationLat: $LocationLat";
-	echo "LocationLong: $LocationLong";
-	echo "User ID:  $UserID";
-	echo "Time: $Time";
-$connection = new mysqli($GLOBALS['servername'], $GLOBALS['username'], $GLOBALS['password'], $GLOBALS['dbname']);
-	if($connection->connect_error){
-		echo "Connection Error";
+
+if($_SERVER["REQUEST_METHOD"] == "POST")
+	SQLinsert($_REQUEST['AppKey'], $_REQUEST['locationLat'], $_REQUEST['locationLong'], $_REQUEST['id'], $_REQUEST['time']);
+
+function SQLinsert($AppKey, $LocationLat, $LocationLong, $UserID, $Time){
+
+	$connection = new PDO("mysql:host=".$serverName.";dbname=".$dbName, $username, $password);
+	$connection -> setAttribute(PDO::ATTR_ERRMODE, PDO::ERRMODE_EXCEPTION);
+
+	$access = $connection -> prepare("SELECT DB_key FROM Auth WHERE AutoID == 1");
+	$access -> execute();
+	$row = $access->fetch();
+
+	if(password_verify($AppKey, $row[0])){
+		$query1 = $connection -> prepare("INSERT IGNORE INTO users (UserID) VALUES ('$UserID')");
+		if(!($query1 -> execute()))
+			echo "Query error. User not added";
+
+		$query2 = $connection -> prepare("INSERT INTO Locations (LocationLat, LocationLong, UserID, Time)
+						VALUES ('$LocationLat', '$LocationLong', '$UserID', '$Time')";
+		if(!($query2 -> execute()))
+			echo "Query error. Location added";
 	}
-	#$query = "INSERT INTO test VALUES ('" . $name . "'," . $id . ")";
-	
-	$query1 = "INSERT IGNORE Users SET UserID = '" .$UserID."'";
-	echo "<br> $query1";
-	if($connection->query($query1) === TRUE){
-		echo "USER ADDED";
-	}
-	$query2 = "INSERT INTO Locations VALUES(" . $LocationLat . "," . $LocationLong . ",'" . $UserID . "','" . $Time . "')";
-	
-	if($connection->query($query2) == TRUE){
-		echo "LOCAITON LOGGED";
-	}
-	
+
 	$connection->close();
 }
-if($_SERVER["REQUEST_METHOD"] == "POST"){
-	#$Location = $_REQUEST['name'];
-	SQLinsert($_REQUEST['locationLat'],$_REQUEST['locationLong'], $_REQUEST['id'], $_REQUEST['time']);
-}else{
-	#echo "no post request made";
-}
+						 
+
 function buildPage(){
 	#$connection = new mysqli($GLOBALS['servername'], $GLOBALS['username'], $GLOBALS['password'], $GLOBALS['dbname']);
 	
@@ -72,7 +64,12 @@ function buildPage(){
 	
 	mysql_close($connection);
 }
-buildPage();
 ?>
+
+<!DOCTYPE html>
+<html>
+<body>
+	<h1> PHP Generated Page </h1>
+	<?php buildPage(); ?>
 </body>
 </html>
