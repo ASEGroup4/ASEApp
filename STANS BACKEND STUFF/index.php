@@ -6,13 +6,21 @@ $dbName = "locationdb";
 $connection = null;
 // AppKey to be sent is: 4seGroup4.
 if($_SERVER["REQUEST_METHOD"] == "POST")
-	SQLinsert($_REQUEST['AppKey'], $_REQUEST['locationLat'], $_REQUEST['locationLong'], $_REQUEST['id'], $_REQUEST['time']);
+	SQLinsert(filter_var($_REQUEST['AppKey'], FILTER_SANITIZE_EMAIL), 
+		  filter_var($_REQUEST['locationLat'], FILTER_SANITIZE_NUMBER_FLOAT),
+		  filter_var($_REQUEST['locationLong'], FILTER_SANITIZE_NUMBER_FLOAT),
+		  filter_var($_REQUEST['id'], FILTER_SANITIZE_STRING),
+		  filter_var($_REQUEST['time'], FILTER_SANITIZE_EMAIL
+		 );
+
 function SQLinsert($AppKey, $LocationLat, $LocationLong, $UserID, $Time){
 	$connection = new PDO("mysql:host=".$serverName.";dbname=".$dbName, $username, $password);
 	$connection -> setAttribute(PDO::ATTR_ERRMODE, PDO::ERRMODE_EXCEPTION);
+	
 	$access = $connection -> prepare("SELECT DB_key FROM Auth WHERE AutoID == 1");
 	$access -> execute();
 	$row = $access->fetch();
+	
 	if(password_verify($AppKey, $row[0])){
 		$query1 = $connection -> prepare("INSERT IGNORE INTO users (UserID) VALUES ('$UserID')");
 		if(!($query1 -> execute()))
