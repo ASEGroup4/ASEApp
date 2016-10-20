@@ -4,40 +4,30 @@ $username = "admin";
 $password = "asegroup4";
 $dbName = "locationdb";
 $connection = null;
-
 // AppKey to be sent is: 4seGroup4.
-
 if($_SERVER["REQUEST_METHOD"] == "POST")
 	SQLinsert($_REQUEST['AppKey'], $_REQUEST['locationLat'], $_REQUEST['locationLong'], $_REQUEST['id'], $_REQUEST['time']);
-
 function SQLinsert($AppKey, $LocationLat, $LocationLong, $UserID, $Time){
-
 	$connection = new PDO("mysql:host=".$serverName.";dbname=".$dbName, $username, $password);
 	$connection -> setAttribute(PDO::ATTR_ERRMODE, PDO::ERRMODE_EXCEPTION);
-
 	$access = $connection -> prepare("SELECT DB_key FROM Auth WHERE AutoID == 1");
 	$access -> execute();
 	$row = $access->fetch();
-
 	if(password_verify($AppKey, $row[0])){
 		$query1 = $connection -> prepare("INSERT IGNORE INTO users (UserID) VALUES ('$UserID')");
 		if(!($query1 -> execute()))
 			echo "Query error. User not added";
-
-		$query2 = $connection -> prepare("INSERT INTO Locations (LocationLat, LocationLong, UserID, Time)
-						VALUES ('$LocationLat', '$LocationLong', '$UserID', '$Time')";
+		$query2 = $connection -> prepare("INSERT INTO Locations (LocationLat, LocationLong, UserID, Time) VALUES ('$LocationLat', '$LocationLong', '$UserID', '$Time')");
 		if(!($query2 -> execute()))
 			echo "Query error. Location added";
 	}
-
 	$connection->close();
 }
 						 
-
 function buildPage(){
 	#$connection = new mysqli($GLOBALS['servername'], $GLOBALS['username'], $GLOBALS['password'], $GLOBALS['dbname']);
 	
-	$connection = mysql_connect($GLOBALS['servername'], $GLOBALS['username'], $GLOBALS['password']);
+	$connection = mysql_connect($GLOBALS['serverName'], $GLOBALS['username'], $GLOBALS['password']);
 	if(!$connection){
 		echo "Connection Error";
 	}
