@@ -10,7 +10,7 @@ if($_SERVER["REQUEST_METHOD"] == "POST")
 		  filter_var($_REQUEST['locationLat'], FILTER_SANITIZE_NUMBER_FLOAT),
 		  filter_var($_REQUEST['locationLong'], FILTER_SANITIZE_NUMBER_FLOAT),
 		  filter_var($_REQUEST['id'], FILTER_SANITIZE_STRING),
-		  filter_var($_REQUEST['time'], FILTER_SANITIZE_EMAIL
+		  filter_var($_REQUEST['time'], FILTER_SANITIZE_STRING)
 		 );
 
 function SQLinsert($AppKey, $LocationLat, $LocationLong, $UserID, $Time){
@@ -30,6 +30,7 @@ function SQLinsert($AppKey, $LocationLat, $LocationLong, $UserID, $Time){
 			echo "Query error. Location added";
 	}
 	$connection->close();
+	
 }
 						 
 function buildPage(){
