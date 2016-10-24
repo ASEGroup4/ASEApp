@@ -10,6 +10,7 @@ import android.content.Intent;
 import android.icu.text.SimpleDateFormat;
 import android.icu.util.Calendar;
 import android.support.annotation.RequiresApi;
+import android.util.Log;
 import android.view.View;
 import android.widget.Toast;
 
@@ -92,7 +93,7 @@ public class MapsActivity extends FragmentActivity implements OnMapReadyCallback
                 .findFragmentById(R.id.map);
         mapFragment.getMapAsync(this);
 
-
+        mLastLocation = new Location("");
     }
 
 
@@ -129,7 +130,7 @@ public class MapsActivity extends FragmentActivity implements OnMapReadyCallback
         SimpleDateFormat sdf = new SimpleDateFormat("dd/mm/yyyy hh:mm:ss");
         String strDate = sdf.format(c.getTime());
         Toast.makeText(this, strDate, Toast.LENGTH_SHORT).show();
-		
+
 	}
 	
     /**
@@ -160,7 +161,7 @@ public class MapsActivity extends FragmentActivity implements OnMapReadyCallback
             mMap.setMyLocationEnabled(true);
         }
         startAlarm();
-        addHeatMap();
+
     }
 
     protected synchronized void buildGoogleApiClient() {
@@ -196,6 +197,7 @@ public class MapsActivity extends FragmentActivity implements OnMapReadyCallback
     public void onLocationChanged(Location location) {
 
         mLastLocation = location;
+        addHeatMap();
         if (mCurrLocationMarker != null) {
             mCurrLocationMarker.remove();
         }
@@ -305,18 +307,13 @@ public class MapsActivity extends FragmentActivity implements OnMapReadyCallback
 
 
     private void addHeatMap() {
+        Log.d ("heat", "adding heatmap");
         List<LatLng> list = null;
+        HeatMapData heatmap = new HeatMapData(51.507,0.128,this);
+        list = new ArrayList<LatLng>();
+        list.add(new LatLng(57.14416516, -2.114847768));
+        mProvider = new HeatmapTileProvider.Builder().data(list).build();
 
-        // Get the data: latitude/longitude positions of police stations.
-
-           list = new ArrayList<LatLng>();
-           list.add(new LatLng(57.14416516, -2.114847768));
-
-        // Create a heat map tile provider, passing it the latlngs of the police stations.
-        mProvider = new HeatmapTileProvider.Builder()
-                .data(list)
-                .build();
-        // Add a tile overlay to the map, using the heat map tile provider.
         mOverlay = mMap.addTileOverlay(new TileOverlayOptions().tileProvider(mProvider));
     }
 }

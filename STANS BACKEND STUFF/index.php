@@ -34,7 +34,7 @@ function SQLinsert($AppKey, $LocationLat, $LocationLong, $UserID, $Time){
 }
 						 
 function buildPage(){
-	#$connection = new mysqli($GLOBALS['servername'], $GLOBALS['username'], $GLOBALS['password'], $GLOBALS['dbname']);
+	#$connection = new mysqli($GLOBALS['serverName'], $GLOBALS['userName'], $GLOBALS['password'], $GLOBALS['dbname']);
 	
 	$connection = mysql_connect($GLOBALS['serverName'], $GLOBALS['username'], $GLOBALS['password']);
 	if(!$connection){
