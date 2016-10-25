@@ -38,36 +38,28 @@ public class HeatMapData {
     private String json;
 
     public  String JSON_URL;
-    private void sendRequest(){
-        StringRequest stringRequest = new StringRequest(JSON_URL,
-                new Response.Listener<String>() {
-            @Override
-            public void onResponse(String response) {
-                Log.d("heat",response);
 
-                json = response;
-                getHeatMapData();
-            }
-        },
-                new Response.ErrorListener() {
-                    @Override
-                    public void onErrorResponse(VolleyError error) {
-                      //error message
-                    }
-                });
-        RequestQueue requestQueue = Volley.newRequestQueue(context);
-        requestQueue.add(stringRequest);
+
+
+    public HeatMapData(String json){
+        this.json = json;
+        getHeatMapData();
     }
 
-
-    public HeatMapData(double latitude, double longitude,Context context){
-        this.latitude=latitude;
-        this.longitude=longitude;
-        JSON_URL = "http://users.sussex.ac.uk/~dil20/heatmap.php?latitude=" + latitude + "&longitude=" + longitude;
-        this.context = context;
-        sendRequest();
+    public String[] getLatitudes(){
+        return latitudes;
     }
 
+    public String[] getLongitudes(){
+        return longitudes;
+    }
+
+    public String[] getValues(){
+        return values;
+    }
+    public String[] getPostCodes(){
+        return postCodes;
+    }
     public void getHeatMapData() {
         JSONArray jsonObject=null;
         try {
@@ -79,14 +71,14 @@ public class HeatMapData {
 
             for(int i=0;i<jsonObject.length();i++){
                 JSONObject jo = jsonObject.getJSONObject(i);
-                 // postCodes[i] = jo.getString(KEY_POSTCODE);
+                postCodes[i] = jo.getString(KEY_POSTCODE);
                 values[i] = jo.getString(KEY_VALUE);
                 latitudes[i] = jo.getString(KEY_LATITUDE);
                 longitudes[i] = jo.getString(KEY_LONGITUDE);
             }
 
             for(int i=0;i<latitudes.length;i++) {
-                System.out.println("Lat: "+latitudes[i]+"   Long: "+longitudes[i]+"   Vals: "+values[i]);
+                System.out.println(/*"Lat: "+latitudes[i]+"   Long: "+longitudes[i]+*/"PCOde: "+postCodes[i]+" Vals: "+values[i]);
             }
         }
         catch (JSONException e) {
@@ -95,4 +87,3 @@ public class HeatMapData {
 
     }
 }
-

@@ -7,6 +7,7 @@ import android.app.PendingIntent;
 import android.content.Context;
 import android.content.DialogInterface;
 import android.content.Intent;
+import android.graphics.Color;
 import android.icu.text.SimpleDateFormat;
 import android.icu.util.Calendar;
 import android.support.annotation.RequiresApi;
@@ -27,6 +28,11 @@ import android.support.v4.content.ContextCompat;
 import android.widget.Toast;
 import android.net.wifi.WifiManager;
 
+import com.android.volley.RequestQueue;
+import com.android.volley.Response;
+import com.android.volley.VolleyError;
+import com.android.volley.toolbox.StringRequest;
+import com.android.volley.toolbox.Volley;
 import com.google.android.gms.common.ConnectionResult;
 import com.google.android.gms.common.api.GoogleApiClient;
 import com.google.android.gms.location.LocationListener;
@@ -43,7 +49,9 @@ import com.google.android.gms.maps.model.Marker;
 import com.google.android.gms.maps.model.MarkerOptions;
 import com.google.android.gms.maps.model.TileOverlay;
 import com.google.android.gms.maps.model.TileOverlayOptions;
+import com.google.maps.android.heatmaps.Gradient;
 import com.google.maps.android.heatmaps.HeatmapTileProvider;
+import com.google.maps.android.heatmaps.WeightedLatLng;
 
 import org.json.JSONException;
 
@@ -307,14 +315,71 @@ public class MapsActivity extends FragmentActivity implements OnMapReadyCallback
 
 
     private void addHeatMap() {
-        Log.d ("heat", "adding heatmap");
-        List<LatLng> list = null;
-        HeatMapData heatmap = new HeatMapData(51.507,0.128,this);
-        list = new ArrayList<LatLng>();
-        list.add(new LatLng(57.14416516, -2.114847768));
-        mProvider = new HeatmapTileProvider.Builder().data(list).build();
 
-        mOverlay = mMap.addTileOverlay(new TileOverlayOptions().tileProvider(mProvider));
+        double latitude = mLastLocation.getLatitude();
+        final double longitude =mLastLocation.getLongitude();
+        String JSON_URL = "http://users.sussex.ac.uk/~dil20/heatmap.php?latitude=" + latitude + "&longitude=" + longitude;
+        StringRequest stringRequest = new StringRequest(JSON_URL,
+                new Response.Listener<String>() {
+                    @Override
+                    public void onResponse(String response) {
+                        Log.d("heat",response);
+                        HeatMapData heatmap;
+                        String json = response;
+                        heatmap = new HeatMapData(json);
+
+
+                        Log.d ("heat", "adding heatmap");
+                        List<WeightedLatLng> list = null;
+
+                        list = new ArrayList<WeightedLatLng>();
+                        String[] latitudes = heatmap.getLatitudes();
+                        String[] longitudes = heatmap.getLongitudes();
+                        String[] values = heatmap.getValues();
+                        String[] postCodes = heatmap.getPostCodes();
+                        for (int i =0;i<latitudes.length;i++){
+                            double lat =Double.parseDouble(latitudes[i]);
+                            double lng =Double.parseDouble(longitudes[i]);
+                            double val = Double.parseDouble(values[i]);
+                            System.out.println("PostCodes: "+postCodes[i]+" val: "+val);
+                          LatLng latLong = new  LatLng(lat, lng);
+
+                           list.add(new WeightedLatLng(latLong,val));
+                        }
+
+                        int[] colors = {
+
+                                Color.rgb(102, 225, 0),// green
+                                Color.rgb(255, 0, 0)// red
+                        };
+
+                        float[] startPoints = {
+                                0.01f, 1f
+                        };
+
+                        Gradient gradient = new Gradient(colors, startPoints);
+
+                        mProvider = new HeatmapTileProvider.Builder()
+                                .weightedData(list)
+                                .gradient(gradient)
+                                .radius(30)
+                                .build();
+                        mOverlay = mMap.addTileOverlay(new TileOverlayOptions().tileProvider(mProvider));
+
+
+                    }
+                },
+                new Response.ErrorListener() {
+                    @Override
+                    public void onErrorResponse(VolleyError error) {
+                        //error message
+                    }
+                });
+        RequestQueue requestQueue = Volley.newRequestQueue(this);
+        requestQueue.add(stringRequest);
+
+
+
     }
 }
 
