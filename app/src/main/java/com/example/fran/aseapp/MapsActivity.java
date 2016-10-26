@@ -344,7 +344,7 @@ public class MapsActivity extends FragmentActivity implements OnMapReadyCallback
                             System.out.println("PostCodes: "+postCodes[i]+" val: "+val);
                           LatLng latLong = new  LatLng(lat, lng);
 
-                           list.add(new WeightedLatLng(latLong,val));
+                           list.add(new WeightedLatLng(latLong,i));
                         }
 
                         int[] colors = {
@@ -352,12 +352,21 @@ public class MapsActivity extends FragmentActivity implements OnMapReadyCallback
                                 Color.rgb(102, 225, 0),// green
                                 Color.rgb(255, 0, 0)// red
                         };
-
+                        int[] oldColors = {
+                                Color.rgb(0, 0, 255), Color.rgb(255, 0, 255)
+                        };
                         float[] startPoints = {
                                 0.01f, 1f
                         };
+                        /*
+                            if(mode == old prices){
+                                Gradient = new Gradient(oldColors, startPoints);
+                            }else{
+                                Gradient = new Gradient(colors, startPoints);
 
+                         */
                         Gradient gradient = new Gradient(colors, startPoints);
+                        //Gradient gradient = new Gradient(oldColors, startPoints);
 
                         mProvider = new HeatmapTileProvider.Builder()
                                 .weightedData(list)
