@@ -205,7 +205,7 @@ public class MapsActivity extends FragmentActivity implements OnMapReadyCallback
     public void onLocationChanged(Location location) {
 
         mLastLocation = location;
-        addHeatMap();
+        addHeatMap(mLastLocation.getLatitude(), mLastLocation.getLongitude());
         if (mCurrLocationMarker != null) {
             mCurrLocationMarker.remove();
         }
@@ -314,10 +314,10 @@ public class MapsActivity extends FragmentActivity implements OnMapReadyCallback
     }
 
 
-    private void addHeatMap() {
+    private void addHeatMap(double lat, double lon) {
 
-        double latitude = mLastLocation.getLatitude();
-        final double longitude =mLastLocation.getLongitude();
+        double latitude = lat;
+        final double longitude = lon;
         String JSON_URL = "http://users.sussex.ac.uk/~dil20/heatmap.php?latitude=" + latitude + "&longitude=" + longitude;
         StringRequest stringRequest = new StringRequest(JSON_URL,
                 new Response.Listener<String>() {
