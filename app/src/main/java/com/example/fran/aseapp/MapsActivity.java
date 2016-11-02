@@ -365,8 +365,8 @@ public class MapsActivity extends FragmentActivity implements OnMapReadyCallback
                                 Gradient = new Gradient(colors, startPoints);
 
                          */
-                        Gradient gradient = new Gradient(colors, startPoints);
-                        //Gradient gradient = new Gradient(oldColors, startPoints);
+                        //Gradient gradient = new Gradient(colors, startPoints);
+                        Gradient gradient = new Gradient(oldColors, startPoints);
 
                         mProvider = new HeatmapTileProvider.Builder()
                                 .weightedData(list)
