@@ -14,8 +14,12 @@ if($_SERVER["REQUEST_METHOD"] == "POST")
 		 );
 
 function SQLinsert($AppKey, $LocationLat, $LocationLong, $UserID, $Time){
+<<<<<<< HEAD
 	//$serverName, $username, $password, $dbName, $connection;
 	$connection = new PDO("mysql:host=$GLOBALS['serverName'];dbname=$GLOBALS['dbName'], $GLOBALS['username'], $GLOBALS['password']");
+=======
+	$connection = new PDO("mysql:host=$serverName;dbname=$dbName, $username, $password");
+>>>>>>> c5124d92b6a725265c3aaa065bf46bd9055008f3
 	$connection -> setAttribute(PDO::ATTR_ERRMODE, PDO::ERRMODE_EXCEPTION);
 	
 	$access = $connection -> prepare("SELECT DB_key FROM Auth WHERE AutoID == 1");

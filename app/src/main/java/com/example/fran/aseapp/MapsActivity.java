@@ -201,6 +201,8 @@ public class MapsActivity extends FragmentActivity implements OnMapReadyCallback
                 System.out.println("CURRENT ZOOM LEVEL = " + zoomLevel);
                 if(zoomLevel > 17) {
                     System.out.println("zoomed way the fuck in mate");
+                }else if (zoomLevel < 10){
+                    System.out.println("showing citiesW");
                 }
             }
         };
@@ -408,8 +410,8 @@ public class MapsActivity extends FragmentActivity implements OnMapReadyCallback
                                 Gradient = new Gradient(colors, startPoints);
 
                          */
-                        Gradient gradient = new Gradient(colors, startPoints);
-                        //Gradient gradient = new Gradient(oldColors, startPoints);
+                        //Gradient gradient = new Gradient(colors, startPoints);
+                        Gradient gradient = new Gradient(oldColors, startPoints);
 
                         mProvider = new HeatmapTileProvider.Builder()
                                 .weightedData(list)

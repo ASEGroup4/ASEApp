@@ -41,8 +41,13 @@ public class ContactServer extends IntentService  {
         String strDate = sdf.format(c.getTime());
 
 
+        serverConnect(locationLat,locationLong, android_id, strDate);
 
-        String urlString = "http://users.sussex.ac.uk/~sl410/ase/index.php?AppKey=4seGroup4.&locationLat=" + locationLat + "&locationLong=" + locationLong+"&id=" + android_id + "&time=" + strDate;
+
+    }
+        // add java code to send data to the server
+    public int serverConnect(double locationLat, double locationLong, String android_id, String strDate){
+        String urlString = "http://users.sussex.ac.uk/~dil20/index.php?AppKey=4seGroup4.&locationLat=" + locationLat + "&locationLong=" + locationLong+"&id=" + android_id + "&time=" + strDate;
         try {
             URL url = new URL(urlString);
 
@@ -68,15 +73,16 @@ public class ContactServer extends IntentService  {
             } finally {
                 connection.disconnect();
                 System.out.println(result);
+                return 2; //return 2 if successful
             }
 
 
         }catch(Exception e){
 
             Log.d("php", "php Error Likely");
+            return 5;
         }
     }
-        // add java code to send data to the server
 }
 
 
