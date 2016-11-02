@@ -14,7 +14,8 @@ if($_SERVER["REQUEST_METHOD"] == "POST")
 		 );
 
 function SQLinsert($AppKey, $LocationLat, $LocationLong, $UserID, $Time){
-	$connection = new PDO("mysql:host=".$serverName.";dbname=".$dbName, $username, $password);
+	global $serverName,$username,$password,$dbName,$connection;
+	$connection = new PDO("mysql:host=$serverName;dbname=$dbName, $username, $password");
 	$connection -> setAttribute(PDO::ATTR_ERRMODE, PDO::ERRMODE_EXCEPTION);
 	
 	$access = $connection -> prepare("SELECT DB_key FROM Auth WHERE AutoID == 1");
