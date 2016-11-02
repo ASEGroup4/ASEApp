@@ -7,9 +7,14 @@ import android.app.PendingIntent;
 import android.content.Context;
 import android.content.DialogInterface;
 import android.content.Intent;
+import android.graphics.Bitmap;
+import android.graphics.Canvas;
 import android.graphics.Color;
+import android.graphics.Paint;
+import android.graphics.Rect;
 import android.icu.text.SimpleDateFormat;
 import android.icu.util.Calendar;
+import android.net.Uri;
 import android.support.annotation.RequiresApi;
 import android.util.Log;
 import android.view.View;
@@ -33,6 +38,9 @@ import com.android.volley.Response;
 import com.android.volley.VolleyError;
 import com.android.volley.toolbox.StringRequest;
 import com.android.volley.toolbox.Volley;
+import com.google.android.gms.appindexing.Action;
+import com.google.android.gms.appindexing.AppIndex;
+import com.google.android.gms.appindexing.Thing;
 import com.google.android.gms.common.ConnectionResult;
 import com.google.android.gms.common.api.GoogleApiClient;
 import com.google.android.gms.location.LocationListener;
@@ -44,6 +52,7 @@ import com.google.android.gms.maps.GoogleMap;
 import com.google.android.gms.maps.OnMapReadyCallback;
 import com.google.android.gms.maps.SupportMapFragment;
 import com.google.android.gms.maps.model.BitmapDescriptorFactory;
+import com.google.android.gms.maps.model.CameraPosition;
 import com.google.android.gms.maps.model.LatLng;
 import com.google.android.gms.maps.model.Marker;
 import com.google.android.gms.maps.model.MarkerOptions;
@@ -52,6 +61,7 @@ import com.google.android.gms.maps.model.TileOverlayOptions;
 import com.google.maps.android.heatmaps.Gradient;
 import com.google.maps.android.heatmaps.HeatmapTileProvider;
 import com.google.maps.android.heatmaps.WeightedLatLng;
+import com.google.maps.android.ui.IconGenerator;
 
 import org.json.JSONException;
 
@@ -59,15 +69,20 @@ import java.util.ArrayList;
 import java.util.List;
 
 public class MapsActivity extends FragmentActivity implements OnMapReadyCallback,
+        GoogleMap.OnCameraChangeListener,
         GoogleApiClient.ConnectionCallbacks,
         GoogleApiClient.OnConnectionFailedListener,
         LocationListener {
 
     private GoogleMap mMap;
+    private float zoomLevel;
+    IconGenerator iconGenerator;
     GoogleApiClient mGoogleApiClient;
     static Location mLastLocation;
     Marker mCurrLocationMarker;
     LocationRequest mLocationRequest;
+
+
 
     private HeatmapTileProvider mProvider;
     private TileOverlay mOverlay;
@@ -75,25 +90,29 @@ public class MapsActivity extends FragmentActivity implements OnMapReadyCallback
 
     private PendingIntent pendingIntent;
     private AlarmManager manager;
+    /**
+     * ATTENTION: This was auto-generated to implement the App Indexing API.
+     * See https://g.co/AppIndexing/AndroidStudio for more information.
+     */
+    private GoogleApiClient client;
 
 
     // checkWifi() checks if wifi is enabled
-    public Boolean checkWifi(){		
-	WifiManager wifi = (WifiManager)getSystemService(Context.WIFI_SERVICE);
-	if(wifi.isWifiEnabled()) {
-		return true;
-	}
-	return false;
+    public Boolean checkWifi() {
+        WifiManager wifi = (WifiManager) getSystemService(Context.WIFI_SERVICE);
+        if (wifi.isWifiEnabled()) {
+            return true;
+        }
+        return false;
     }
 
 
-    
     @Override
     protected void onCreate(Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
         setContentView(R.layout.activity_maps);
 
-        if (android.os.Build.VERSION.SDK_INT >= Build.VERSION_CODES.M) {
+        if (Build.VERSION.SDK_INT >= Build.VERSION_CODES.M) {
             checkLocationPermission();
         }
         // Obtain the SupportMapFragment and get notified when the map is ready to be used.
@@ -102,18 +121,21 @@ public class MapsActivity extends FragmentActivity implements OnMapReadyCallback
         mapFragment.getMapAsync(this);
 
         mLastLocation = new Location("");
+        // ATTENTION: This was auto-generated to implement the App Indexing API.
+        // See https://g.co/AppIndexing/AndroidStudio for more information.
+        client = new GoogleApiClient.Builder(this).addApi(AppIndex.API).build();
+
     }
 
 
-
-	@RequiresApi(api = Build.VERSION_CODES.N)
+    @RequiresApi(api = Build.VERSION_CODES.N)
     @Override
-	protected void onResume(){
+    protected void onResume() {
         super.onResume(); // this line calls the super of onResume and doesn't crash
-		
-        if(!checkWifi()){
-			//Log.i("testing if wifi is on\n");
-			//Toast.makeText(this, "Please Enable Wifi", Toast.LENGTH_LONG).show();
+
+        if (!checkWifi()) {
+            //Log.i("testing if wifi is on\n");
+            //Toast.makeText(this, "Please Enable Wifi", Toast.LENGTH_LONG).show();
             AlertDialog.Builder builder = new AlertDialog.Builder(this);
             builder.setTitle("Wifi not enabled");
             builder.setMessage("Enable Wifi?");
@@ -132,15 +154,17 @@ public class MapsActivity extends FragmentActivity implements OnMapReadyCallback
             });
             AlertDialog dialog = builder.create();
             dialog.show();
-		}
+        }
+
+
 
         Calendar c = Calendar.getInstance();
         SimpleDateFormat sdf = new SimpleDateFormat("dd/mm/yyyy hh:mm:ss");
         String strDate = sdf.format(c.getTime());
         Toast.makeText(this, strDate, Toast.LENGTH_SHORT).show();
 
-	}
-	
+    }
+
     /**
      * Manipulates the map once available.
      * This callback is triggered when the map is ready to be used.
@@ -156,21 +180,36 @@ public class MapsActivity extends FragmentActivity implements OnMapReadyCallback
         mMap.setMapType(GoogleMap.MAP_TYPE_HYBRID);
 
         //Initialize Google Play Services
-        if (android.os.Build.VERSION.SDK_INT >= Build.VERSION_CODES.M) {
+        if (Build.VERSION.SDK_INT >= Build.VERSION_CODES.M) {
             if (ContextCompat.checkSelfPermission(this,
                     Manifest.permission.ACCESS_FINE_LOCATION)
                     == PackageManager.PERMISSION_GRANTED) {
                 buildGoogleApiClient();
                 mMap.setMyLocationEnabled(true);
             }
-        }
-        else {
+        } else {
             buildGoogleApiClient();
             mMap.setMyLocationEnabled(true);
         }
+
+        iconGenerator = new IconGenerator(getApplicationContext());
+
+        GoogleMap.OnCameraChangeListener cameraChangeListener = new GoogleMap.OnCameraChangeListener() {
+            @Override
+            public void onCameraChange(CameraPosition cameraPosition) {
+                zoomLevel = mMap.getCameraPosition().zoom;
+                System.out.println("CURRENT ZOOM LEVEL = " + zoomLevel);
+                if(zoomLevel > 17) {
+                    System.out.println("zoomed way the fuck in mate");
+                }
+            }
+        };
+        mMap.setOnCameraChangeListener(cameraChangeListener);
         startAlarm();
 
+
     }
+
 
     protected synchronized void buildGoogleApiClient() {
         mGoogleApiClient = new GoogleApiClient.Builder(this)
@@ -183,7 +222,7 @@ public class MapsActivity extends FragmentActivity implements OnMapReadyCallback
 
     @Override
     public void onConnected(Bundle bundle) {
-	    //Toast.makeText(this, "This is a test toast, no idea where it will show up", Toast.LENGTH_LONG).show();
+        //Toast.makeText(this, "This is a test toast, no idea where it will show up", Toast.LENGTH_LONG).show();
         mLocationRequest = new LocationRequest();
         mLocationRequest.setInterval(1000);
         mLocationRequest.setFastestInterval(1000);
@@ -206,6 +245,7 @@ public class MapsActivity extends FragmentActivity implements OnMapReadyCallback
 
         mLastLocation = location;
         addHeatMap(mLastLocation.getLatitude(), mLastLocation.getLongitude());
+        //addHeatMap(51.8227, -0.1398);
         if (mCurrLocationMarker != null) {
             mCurrLocationMarker.remove();
         }
@@ -229,13 +269,15 @@ public class MapsActivity extends FragmentActivity implements OnMapReadyCallback
 
     }
 
+
     @Override
     public void onConnectionFailed(ConnectionResult connectionResult) {
         Toast.makeText(this, "connection failed", Toast.LENGTH_LONG).show();
     }
 
     public static final int MY_PERMISSIONS_REQUEST_LOCATION = 99;
-    public boolean checkLocationPermission(){
+
+    public boolean checkLocationPermission() {
         if (ContextCompat.checkSelfPermission(this,
                 Manifest.permission.ACCESS_FINE_LOCATION)
                 != PackageManager.PERMISSION_GRANTED) {
@@ -301,9 +343,9 @@ public class MapsActivity extends FragmentActivity implements OnMapReadyCallback
     }
 
     public void startAlarm() {
-        manager = (AlarmManager)getSystemService(Context.ALARM_SERVICE);
+        manager = (AlarmManager) getSystemService(Context.ALARM_SERVICE);
         int interval = 30000;
-        int passing =1;
+        int passing = 1;
 
         Intent alarmIntent = new Intent(this, AlarmReceiver.class);
         alarmIntent.putExtra("location", Integer.toString(passing++));
@@ -323,13 +365,14 @@ public class MapsActivity extends FragmentActivity implements OnMapReadyCallback
                 new Response.Listener<String>() {
                     @Override
                     public void onResponse(String response) {
-                        Log.d("heat",response);
+                        System.out.println("addHeatMap called");
+                        Log.d("heat", response);
                         HeatMapData heatmap;
                         String json = response;
                         heatmap = new HeatMapData(json);
 
 
-                        Log.d ("heat", "adding heatmap");
+                        Log.d("heat", "adding heatmap");
                         List<WeightedLatLng> list = null;
 
                         list = new ArrayList<WeightedLatLng>();
@@ -337,14 +380,14 @@ public class MapsActivity extends FragmentActivity implements OnMapReadyCallback
                         String[] longitudes = heatmap.getLongitudes();
                         String[] values = heatmap.getValues();
                         String[] postCodes = heatmap.getPostCodes();
-                        for (int i =0;i<latitudes.length;i++){
-                            double lat =Double.parseDouble(latitudes[i]);
-                            double lng =Double.parseDouble(longitudes[i]);
+                        for (int i = 0; i < latitudes.length; i++) {
+                            double lat = Double.parseDouble(latitudes[i]);
+                            double lng = Double.parseDouble(longitudes[i]);
                             double val = Double.parseDouble(values[i]);
-                            System.out.println("PostCodes: "+postCodes[i]+" val: "+val);
-                          LatLng latLong = new  LatLng(lat, lng);
+                            System.out.println("PostCodes: " + postCodes[i] + " val: " + val);
+                            LatLng latLong = new LatLng(lat, lng);
 
-                           list.add(new WeightedLatLng(latLong,i));
+                            list.add(new WeightedLatLng(latLong, i));
                         }
 
                         int[] colors = {
@@ -388,7 +431,47 @@ public class MapsActivity extends FragmentActivity implements OnMapReadyCallback
         requestQueue.add(stringRequest);
 
 
+    }
 
+    @Override
+    public void onCameraChange(CameraPosition cameraPosition) {
+        System.out.println("camera changed");
+    }
+
+    /**
+     * ATTENTION: This was auto-generated to implement the App Indexing API.
+     * See https://g.co/AppIndexing/AndroidStudio for more information.
+     */
+    public Action getIndexApiAction() {
+        Thing object = new Thing.Builder()
+                .setName("Maps Page") // TODO: Define a title for the content shown.
+                // TODO: Make sure this auto-generated URL is correct.
+                .setUrl(Uri.parse("http://[ENTER-YOUR-URL-HERE]"))
+                .build();
+        return new Action.Builder(Action.TYPE_VIEW)
+                .setObject(object)
+                .setActionStatus(Action.STATUS_TYPE_COMPLETED)
+                .build();
+    }
+
+    @Override
+    public void onStart() {
+        super.onStart();
+
+        // ATTENTION: This was auto-generated to implement the App Indexing API.
+        // See https://g.co/AppIndexing/AndroidStudio for more information.
+        client.connect();
+        AppIndex.AppIndexApi.start(client, getIndexApiAction());
+    }
+
+    @Override
+    public void onStop() {
+        super.onStop();
+
+        // ATTENTION: This was auto-generated to implement the App Indexing API.
+        // See https://g.co/AppIndexing/AndroidStudio for more information.
+        AppIndex.AppIndexApi.end(client, getIndexApiAction());
+        client.disconnect();
     }
 }
 
