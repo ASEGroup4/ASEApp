@@ -20,6 +20,7 @@ public class ApplicationTest extends ActivityInstrumentationTestCase2<MapsActivi
 
     MapsActivity mapsActivity;
 
+
     public ApplicationTest() {
         super(MapsActivity.class);
     }
