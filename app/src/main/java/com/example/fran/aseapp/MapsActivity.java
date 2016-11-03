@@ -56,6 +56,7 @@ import com.google.android.gms.maps.model.CameraPosition;
 import com.google.android.gms.maps.model.LatLng;
 import com.google.android.gms.maps.model.Marker;
 import com.google.android.gms.maps.model.MarkerOptions;
+import com.google.android.gms.maps.model.Tile;
 import com.google.android.gms.maps.model.TileOverlay;
 import com.google.android.gms.maps.model.TileOverlayOptions;
 import com.google.maps.android.heatmaps.Gradient;
@@ -95,8 +96,21 @@ public class MapsActivity extends FragmentActivity implements OnMapReadyCallback
      * See https://g.co/AppIndexing/AndroidStudio for more information.
      */
     private GoogleApiClient client;
-
-
+    public TileOverlay getmOverlay(){
+        return mOverlay;
+    }
+    public HeatmapTileProvider getmProvider(){
+        return mProvider;
+    }
+    public GoogleMap getmMap(){
+        return mMap;
+    }
+    public AlarmManager getManager(){
+        return manager;
+    }
+    public PendingIntent getPendingIntent(){
+        return pendingIntent;
+    }
     // checkWifi() checks if wifi is enabled
     public Boolean checkWifi() {
         WifiManager wifi = (WifiManager) getSystemService(Context.WIFI_SERVICE);
@@ -357,6 +371,86 @@ public class MapsActivity extends FragmentActivity implements OnMapReadyCallback
         Toast.makeText(this, "Connected to server", Toast.LENGTH_SHORT).show();
     }
 
+
+    private void addHeatMapTestable(double lat, double lon, String mockJson){
+        double latitude = lat;
+        final double longitude = lon;
+        String JSON_URL = "http://users.sussex.ac.uk/~dil20/heatmap.php?latitude=" + latitude + "&longitude=" + longitude;
+        StringRequest stringRequest = new StringRequest(JSON_URL,
+                new Response.Listener<String>() {
+                    @Override
+                    public void onResponse(String response) {
+                        System.out.println("addHeatMap called");
+                        Log.d("heat", response);
+                        HeatMapData heatmap;
+                        String json = response;
+                        heatmap = new HeatMapData(json);
+
+
+                        Log.d("heat", "adding heatmap");
+                        List<WeightedLatLng> list = null;
+
+                        list = new ArrayList<WeightedLatLng>();
+                        String[] latitudes = heatmap.getLatitudes();
+                        String[] longitudes = heatmap.getLongitudes();
+                        String[] values = heatmap.getValues();
+                        String[] postCodes = heatmap.getPostCodes();
+                        for (int i = 0; i < latitudes.length; i++) {
+                            double lat = Double.parseDouble(latitudes[i]);
+                            double lng = Double.parseDouble(longitudes[i]);
+                            double val = Double.parseDouble(values[i]);
+                            System.out.println("PostCodes: " + postCodes[i] + " val: " + val);
+                            LatLng latLong = new LatLng(lat, lng);
+
+                            list.add(new WeightedLatLng(latLong, i));
+                        }
+
+                        int[] colors = {
+
+                                Color.rgb(102, 225, 0),// green
+                                Color.rgb(255, 0, 0)// red
+                        };
+                        int[] oldColors = {
+                                Color.rgb(0, 0, 255), Color.rgb(255, 0, 255)
+                        };
+                        float[] startPoints = {
+                                0.01f, 1f
+                        };
+                        /*
+                            if(mode == old prices){
+                                Gradient = new Gradient(oldColors, startPoints);
+                            }else{
+                                Gradient = new Gradient(colors, startPoints);
+
+                         */
+                        //Gradient gradient = new Gradient(colors, startPoints);
+                        Gradient gradient = new Gradient(oldColors, startPoints);
+
+                        mProvider = new HeatmapTileProvider.Builder()
+                                .weightedData(list)
+                                .gradient(gradient)
+                                .radius(30)
+                                .build();
+                        mOverlay = mMap.addTileOverlay(new TileOverlayOptions().tileProvider(mProvider));
+
+
+                    }
+                },
+                new Response.ErrorListener() {
+                    @Override
+                    public void onErrorResponse(VolleyError error) {
+                        //error message
+                    }
+                });
+        RequestQueue requestQueue = Volley.newRequestQueue(this);
+        requestQueue.add(stringRequest);
+
+
+    }
+
+    public void addHeatMapPublic(double lat, double lon){
+        addHeatMap(lat, lon);
+    }
 
     private void addHeatMap(double lat, double lon) {
 
