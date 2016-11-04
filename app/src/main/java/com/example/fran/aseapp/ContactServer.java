@@ -11,11 +11,17 @@ import android.provider.Settings.Secure;
 import java.net.*;
 import java.io.*;
 import java.util.Date;
+
 /**
  * Created by Lucas on 16/10/16.
  */
 
 public class ContactServer extends IntentService  {
+
+    /**
+     * Use this variable to have a quick access to changing the url of the server
+     */
+    String urlString = "http://users.sussex.ac.uk/~dil20/index.php";
 
     /**
      * Creates an IntentService.  Invoked by your subclass's constructor.
@@ -32,20 +38,14 @@ public class ContactServer extends IntentService  {
         double locationLat = intent.getDoubleExtra("locationLat",0);
         double locationLong = intent.getDoubleExtra("locationLong",0);
 
-
-
-
-
         Calendar c = Calendar.getInstance();
         SimpleDateFormat sdf = new SimpleDateFormat("yyyy-MM-dd HH:mm:ss");
         String strDate = sdf.format(c.getTime());
 
-
         serverConnect(locationLat,locationLong, android_id, strDate);
-
-
     }
-        // add java code to send data to the server
+
+
     public int serverConnect(double locationLat, double locationLong, String android_id, String strDate){
         String urlString = "http://users.sussex.ac.uk/~dil20/index.php?AppKey=4seGroup4.&locationLat=" + locationLat + "&locationLong=" + locationLong+"&id=" + android_id + "&time=" + strDate;
         try {

@@ -20,7 +20,7 @@ public class MapsActivityTest {
     @Test
     public void checkWifiTest(){
 
-        Boolean result = mapsActivity.checkWifi();
+        Boolean result = mapsActivity.checkWifi().booleanValue();
         Boolean expected = true;
         assertEquals(expected, result);
     }

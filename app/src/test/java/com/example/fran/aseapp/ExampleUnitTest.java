@@ -11,12 +11,13 @@ import static org.junit.Assert.*;
 public class ExampleUnitTest {
     MapsActivity mapsActivity;
     ContactServer contactServer;
+
+
     @Before
     public void initialize(){
         mapsActivity = new MapsActivity();
         contactServer = new ContactServer();
     }
-
 
 
     @Test

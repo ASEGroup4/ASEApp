@@ -368,7 +368,6 @@ public class MapsActivity extends FragmentActivity implements OnMapReadyCallback
         pendingIntent = PendingIntent.getBroadcast(this, 0, alarmIntent, 0);
 
         manager.setRepeating(AlarmManager.RTC_WAKEUP, System.currentTimeMillis(), interval, pendingIntent);
-        Toast.makeText(this, "Connected to server", Toast.LENGTH_SHORT).show();
     }
 
 
