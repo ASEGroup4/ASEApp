@@ -450,7 +450,7 @@ public class MapsActivity extends FragmentActivity implements OnMapReadyCallback
     public void addHeatMapPublic(double lat, double lon){
         addHeatMap(lat, lon);
     }
-
+    //creates heatmap in conjunction with heatmap data class
     private void addHeatMap(double lat, double lon) {
 
         double latitude = lat;
