@@ -70,6 +70,7 @@ public class HeatMapData {
             longitudes = new String[jsonObject.length()];
             values = new String[jsonObject.length()];
 
+            //loops through Json xml and pulls out data into seperate arrays
             for(int i=0;i<jsonObject.length();i++){
                 JSONObject jo = jsonObject.getJSONObject(i);
                 postCodes[i] = jo.getString(KEY_POSTCODE);
