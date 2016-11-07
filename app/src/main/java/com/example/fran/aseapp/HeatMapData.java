@@ -60,6 +60,7 @@ public class HeatMapData {
     public String[] getPostCodes(){
         return postCodes;
     }
+    //gets Data out of Json object
     public void getHeatMapData() {
         JSONArray jsonObject=null;
         try {
