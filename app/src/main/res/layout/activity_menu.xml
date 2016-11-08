@@ -1,0 +1,85 @@
+<?xml version="1.0" encoding="utf-8"?>
+<RelativeLayout xmlns:android="http://schemas.android.com/apk/res/android"
+    xmlns:tools="http://schemas.android.com/tools"
+    android:id="@+id/activity_menu"
+    android:layout_width="match_parent"
+    android:layout_height="match_parent"
+    android:paddingBottom="@dimen/activity_vertical_margin"
+    android:paddingLeft="@dimen/activity_horizontal_margin"
+    android:paddingRight="@dimen/activity_horizontal_margin"
+    android:paddingTop="@dimen/activity_vertical_margin"
+    tools:context="com.example.fran.aseapp.MenuActivity">
+
+    <TextView
+        android:text="HeatmAPP"
+        android:layout_width="wrap_content"
+        android:layout_height="wrap_content"
+        android:layout_marginTop="56dp"
+        android:id="@+id/titleView"
+        android:textSize="50sp"
+        android:layout_alignParentTop="true"
+        android:layout_centerHorizontal="true" />
+
+    <TextView
+        android:text="version 0.1"
+        android:layout_width="wrap_content"
+        android:layout_height="wrap_content"
+        android:layout_below="@+id/titleView"
+        android:layout_centerHorizontal="true"
+        android:layout_marginTop="19dp"
+        android:id="@+id/versionView"
+        android:textSize="12sp" />
+
+    <EditText
+        android:layout_width="wrap_content"
+        android:layout_height="wrap_content"
+        android:inputType="text"
+        android:ems="10"
+        android:layout_below="@+id/orView"
+        android:layout_alignParentStart="true"
+        android:layout_marginTop="50dp"
+        android:id="@+id/cityNameField"
+        android:textSize="18sp"
+        android:hint="City name"
+        android:selectAllOnFocus="false"
+        android:singleLine="true" />
+
+    <Button
+        android:text="Search"
+        android:layout_width="wrap_content"
+        android:layout_height="wrap_content"
+        android:layout_alignTop="@+id/cityNameField"
+        android:layout_alignParentEnd="true"
+        android:id="@+id/searchButton"
+        android:textSize="14sp" />
+
+    <TextView
+        android:text="ASEGroup 4"
+        android:layout_width="wrap_content"
+        android:layout_height="wrap_content"
+        android:id="@+id/companyView"
+        android:textSize="12sp"
+        android:layout_alignParentBottom="true"
+        android:layout_alignParentStart="true"
+        android:onClick="goToLocalMap" />
+
+    <Button
+        android:text="Show local map"
+        android:layout_width="match_parent"
+        android:layout_height="wrap_content"
+        android:id="@+id/localMapButton"
+        android:textSize="14sp"
+        android:layout_below="@+id/versionView"
+        android:layout_alignParentStart="true"
+        android:layout_marginTop="132dp"
+        android:onClick="goToLocalMap" />
+
+    <TextView
+        android:text="-  or  -"
+        android:layout_width="wrap_content"
+        android:layout_height="wrap_content"
+        android:layout_marginTop="27dp"
+        android:id="@+id/orView"
+        android:layout_below="@+id/localMapButton"
+        android:layout_centerHorizontal="true" />
+</RelativeLayout>
