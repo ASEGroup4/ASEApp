@@ -44,19 +44,6 @@
         android:layout_alignParentStart="true"
         android:onClick="goToLocalMap" />
 
-    <Button
-        style="@drawable/selector"
-        android:text="Use your location"
-        android:layout_width="match_parent"
-        android:layout_height="wrap_content"
-        android:id="@+id/localMapButton"
-        android:textSize="18sp"
-        android:layout_marginTop="65dp"
-        android:onClick="goToLocalMap (MenuActivity)"
-        android:background="@drawable/button_default"
-        android:layout_below="@+id/versionView"
-        android:layout_alignParentStart="true" />
-
     <TextView
         android:text="-  or  -"
         android:layout_width="wrap_content"
@@ -98,6 +85,18 @@
         android:textColorHighlight="@color/colorTextInput"
         android:paddingBottom="10dp"
         android:paddingTop="10dp" />
+
+    <Button
+        style="@drawable/selector"
+        android:text="Use your location"
+        android:layout_width="match_parent"
+        android:layout_height="wrap_content"
+        android:id="@+id/localMapButton"
+        android:textSize="18sp"
+        android:onClick="goToLocalMap"
+        android:background="@drawable/button_default"
+        android:layout_centerVertical="true"
+        android:layout_alignParentStart="true" />
 
     <!-- slider to implement in activity_maps.xml
 

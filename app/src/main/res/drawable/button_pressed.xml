@@ -6,6 +6,6 @@
         android:endColor="@color/colorButtonPressed"
         />
     <!-- this is make corners of button rounded -->
-    <corners    android:radius="@string/button_radius"/>
+    <corners    android:radius="3dip"/>
 
 </shape>

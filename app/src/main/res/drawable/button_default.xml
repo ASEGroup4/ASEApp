@@ -7,6 +7,6 @@
         />
     <stroke android:width="5px" android:color="#FFAA00" />
     <!-- this is make corners of button rounded -->
-    <corners    android:radius="@string/button_radius" />
+    <corners    android:radius="3dip" />
 
 </shape>
