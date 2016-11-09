@@ -43,7 +43,9 @@ public class ApplicationTest extends ActivityInstrumentationTestCase2<MapsActivi
         Boolean actualResult = mapsActivity.checkWifi();
 
         assertTrue(actualResult == expectedResult);
+
     }
+
 
     @Test
     public void testContactServer() throws Exception{

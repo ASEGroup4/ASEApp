@@ -83,7 +83,7 @@ public class MapsActivity extends FragmentActivity implements OnMapReadyCallback
     Marker mCurrLocationMarker;
     LocationRequest mLocationRequest;
 
-
+    WifiManager wifiManager;
 
     private HeatmapTileProvider mProvider;
     private TileOverlay mOverlay;
@@ -112,9 +112,10 @@ public class MapsActivity extends FragmentActivity implements OnMapReadyCallback
         return pendingIntent;
     }
     // checkWifi() checks if wifi is enabled
-    public Boolean checkWifi() {
-        WifiManager wifi = (WifiManager) getSystemService(Context.WIFI_SERVICE);
-        if (wifi.isWifiEnabled()) {
+
+    public Boolean checkWifi(WifiManager wifiManager) {
+        //WifiManager wifi = (WifiManager) getSystemService(Context.WIFI_SERVICE);
+        if (wifiManager.isWifiEnabled()) {
             return true;
         }
         return false;
@@ -138,7 +139,7 @@ public class MapsActivity extends FragmentActivity implements OnMapReadyCallback
         // ATTENTION: This was auto-generated to implement the App Indexing API.
         // See https://g.co/AppIndexing/AndroidStudio for more information.
         client = new GoogleApiClient.Builder(this).addApi(AppIndex.API).build();
-
+        wifiManager = (WifiManager) getSystemService(Context.WIFI_SERVICE);
     }
 
 
@@ -147,7 +148,7 @@ public class MapsActivity extends FragmentActivity implements OnMapReadyCallback
     protected void onResume() {
         super.onResume(); // this line calls the super of onResume and doesn't crash
 
-        if (!checkWifi()) {
+        if (!checkWifi(wifiManager)) {
             //Log.i("testing if wifi is on\n");
             //Toast.makeText(this, "Please Enable Wifi", Toast.LENGTH_LONG).show();
             AlertDialog.Builder builder = new AlertDialog.Builder(this);

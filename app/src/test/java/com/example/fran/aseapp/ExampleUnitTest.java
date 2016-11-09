@@ -27,7 +27,7 @@ public class ExampleUnitTest {
 
     @Test
     public void testConnection() throws Exception {
-            int val = contactServer.serverConnect(50.123, 0.123, "ASS", "0");
+        int val = contactServer.serverConnect(50.123, 0.123, "ASS", "0");
             assertEquals(2, val);
     }
 
