@@ -112,6 +112,7 @@ public class MapsActivity extends FragmentActivity implements OnMapReadyCallback
         return pendingIntent;
     }
     // checkWifi() checks if wifi is enabled
+
     public Boolean checkWifi() {
         WifiManager wifi = (WifiManager) getSystemService(Context.WIFI_SERVICE);
         if (wifi.isWifiEnabled()) {
