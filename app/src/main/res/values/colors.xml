@@ -3,7 +3,7 @@
     <color name="colorPrimary">#3F51B5</color>
     <color name="colorPrimaryDark">#303F9F</color>
     <color name="colorAccent">#FF4081</color>
-    <color name="colorBackground">#00A8FF</color>
+    <color name="colorBackground">@android:color/holo_blue_dark</color>
     <color name="colorButtonDefault">#FFAA00</color>
     <color name="colorButtonPressed">#db7734</color>
     <color name="colorButtonFocused">#db7734</color>
