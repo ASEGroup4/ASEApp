@@ -69,6 +69,10 @@ dependencies {
     androidTestCompile 'com.android.support:support-annotations:24.0.0'
     androidTestCompile 'com.android.support.test:runner:0.5'
     androidTestCompile 'com.android.support.test:rules:0.5'
+
+    //below, added for espresso
+    androidTestCompile 'com.android.support.test.espresso:espresso-core:2.0'
+    androidTestCompile 'com.android.support.test:testing-support-lib:0.1'
 }
 task jacocoTestReport(type: JacocoReport, dependsOn: 'testDebugUnitTest') {
 
