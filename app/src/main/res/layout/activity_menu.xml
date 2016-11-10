@@ -73,7 +73,7 @@
         android:ems="10"
         android:id="@+id/cityNameField"
         android:textSize="20sp"
-        android:hint="type city name.."
+        android:hint="type postcode..."
         android:singleLine="true"
         android:selectAllOnFocus="false"
         android:textAlignment="center"

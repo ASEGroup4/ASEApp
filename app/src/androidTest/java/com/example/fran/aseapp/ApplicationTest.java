@@ -33,7 +33,7 @@ public class ApplicationTest extends ActivityInstrumentationTestCase2<MapsActivi
         mapsActivity = getActivity();
     }
 
-
+    /*
 
     @Test
     public void testWifiChecker() throws Exception{
@@ -76,4 +76,5 @@ public class ApplicationTest extends ActivityInstrumentationTestCase2<MapsActivi
     public void testOnReceive() throws Exception{
 
     }
+    */
 }
