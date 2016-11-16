@@ -262,6 +262,9 @@ public class MapsActivity extends FragmentActivity implements OnMapReadyCallback
 
         mLastLocation = location;
         addHeatMap(mLastLocation.getLatitude(), mLastLocation.getLongitude());
+        // get postcode
+        // MenuActivity.postcode
+
         //addHeatMap(51.8227, -0.1398);
         if (mCurrLocationMarker != null) {
             mCurrLocationMarker.remove();
