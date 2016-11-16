@@ -38,6 +38,7 @@ public class MenuActivity extends AppCompatActivity {
 
     public void goToLocalMap(View view) {
         // create new Intent
+        postcode ="";
         Intent newLocalMap = new Intent(this, MapsActivity.class);
         // adjust zoom / go to location
         // go to map
@@ -47,5 +48,7 @@ public class MenuActivity extends AppCompatActivity {
     public void getPostCode(View view) {
         EditText mEdit = (EditText)findViewById(R.id.cityNameField);
         postcode = mEdit.getText().toString();
+        Intent newLocalMap = new Intent(this, MapsActivity.class);
+        startActivity(newLocalMap);
     }
 }

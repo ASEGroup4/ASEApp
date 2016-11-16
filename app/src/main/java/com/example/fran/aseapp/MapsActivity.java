@@ -378,7 +378,10 @@ public class MapsActivity extends FragmentActivity implements OnMapReadyCallback
     private void addHeatMapTestable(double lat, double lon, String mockJson){
         double latitude = lat;
         final double longitude = lon;
-        String JSON_URL = "http://users.sussex.ac.uk/~dil20/heatmap.php?latitude=" + latitude + "&longitude=" + longitude;
+
+
+             String JSON_URL = "http://users.sussex.ac.uk/~dil20/heatmap.php?latitude=" + latitude + "&longitude=" + longitude;
+
         StringRequest stringRequest = new StringRequest(JSON_URL,
                 new Response.Listener<String>() {
                     @Override
@@ -459,7 +462,8 @@ public class MapsActivity extends FragmentActivity implements OnMapReadyCallback
 
         double latitude = lat;
         final double longitude = lon;
-        String JSON_URL = "http://users.sussex.ac.uk/~dil20/heatmap.php?latitude=" + latitude + "&longitude=" + longitude;
+        Log.d("PCODE",MenuActivity.postcode);
+        String JSON_URL = "http://users.sussex.ac.uk/~dil20/heatmap.php?latitude=" + latitude + "&longitude=" + longitude+ "&postcode=" +MenuActivity.postcode;
         StringRequest stringRequest = new StringRequest(JSON_URL,
                 new Response.Listener<String>() {
                     @Override
