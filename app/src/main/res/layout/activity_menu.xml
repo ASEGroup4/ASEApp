@@ -66,6 +66,12 @@
         android:layout_above="@+id/companyView"
         android:layout_centerHorizontal="true" />
 
+    <LinearLayout
+        android:focusable="true"
+        android:focusableInTouchMode="true"
+        android:layout_width="0px"
+        android:layout_height="0px"/>
+
     <EditText
         android:layout_width="wrap_content"
         android:layout_height="wrap_content"
@@ -84,7 +90,9 @@
         android:background="@drawable/edit_text"
         android:textColorHighlight="@color/colorTextInput"
         android:paddingBottom="10dp"
-        android:paddingTop="10dp" />
+        android:paddingTop="10dp"
+        android:nextFocusUp="@id/cityNameField"
+        android:nextFocusLeft="@id/cityNameField"/>
 
     <Button
         style="@drawable/selector"

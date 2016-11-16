@@ -76,5 +76,5 @@ public class ApplicationTest extends ActivityInstrumentationTestCase2<MapsActivi
     public void testOnReceive() throws Exception{
 
     }
-    */
+
 }
