@@ -483,11 +483,13 @@ public class MapsActivity extends FragmentActivity implements OnMapReadyCallback
                         String[] longitudes = heatmap.getLongitudes();
                         String[] values = heatmap.getValues();
                         String[] postCodes = heatmap.getPostCodes();
+                        mMap.animateCamera(CameraUpdateFactory.newLatLng(new LatLng(Double.parseDouble(latitudes[0]),Double.parseDouble(longitudes[0]))));
                         for (int i = 0; i < latitudes.length; i++) {
                             double lat = Double.parseDouble(latitudes[i]);
                             double lng = Double.parseDouble(longitudes[i]);
                             double val = Double.parseDouble(values[i]);
                             System.out.println("PostCodes: " + postCodes[i] + " val: " + val);
+
                             LatLng latLong = new LatLng(lat, lng);
 
                             list.add(new WeightedLatLng(latLong, i));
