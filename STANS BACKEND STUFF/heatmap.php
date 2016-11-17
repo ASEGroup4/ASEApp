@@ -33,7 +33,7 @@ function getLocalHeatMap(){
     $latitude = number_format((float)$latitude, 3, '.', '');
     $longitude = number_format((float)$longitude, 3, '.', '');
 
-    $range = 0.001;
+    $range = 0.009;
     $minLat = ""+($latitude-$range);
     $maxLat = ""+($latitude+$range);
     $minLong =""+( $longitude-$range);
