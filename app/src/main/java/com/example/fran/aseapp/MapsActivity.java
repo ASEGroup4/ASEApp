@@ -88,6 +88,10 @@ public class MapsActivity extends FragmentActivity implements OnMapReadyCallback
     private HeatmapTileProvider mProvider;
     private TileOverlay mOverlay;
 
+    String[] latitudes;
+    String[] longitudes;
+    String[] values;
+    String[] postCodes;
 
     private PendingIntent pendingIntent;
     private AlarmManager manager;
@@ -215,6 +219,11 @@ public class MapsActivity extends FragmentActivity implements OnMapReadyCallback
                 zoomLevel = mMap.getCameraPosition().zoom;
                 System.out.println("CURRENT ZOOM LEVEL = " + zoomLevel);
                 if(zoomLevel > 17) {
+                    for (int i = 0; i < latitudes.length; i++) {
+                        mMap.addMarker(new MarkerOptions()
+                                .position(new LatLng( Double.parseDouble(latitudes[i]),  Double.parseDouble(longitudes[i])))
+                                .title("Value: "+  Double.parseDouble(values[i])));
+                    }
                     System.out.println("zoomed way the fuck in mate");
                 }else if (zoomLevel < 10){
                     System.out.println("showing citiesW");
@@ -402,6 +411,8 @@ public class MapsActivity extends FragmentActivity implements OnMapReadyCallback
                         String[] values = heatmap.getValues();
                         String[] postCodes = heatmap.getPostCodes();
                         for (int i = 0; i < latitudes.length; i++) {
+
+
                             double lat = Double.parseDouble(latitudes[i]);
                             double lng = Double.parseDouble(longitudes[i]);
                             double val = Double.parseDouble(values[i]);
@@ -409,6 +420,8 @@ public class MapsActivity extends FragmentActivity implements OnMapReadyCallback
                             LatLng latLong = new LatLng(lat, lng);
 
                             list.add(new WeightedLatLng(latLong, i));
+
+
                         }
 
                         int[] colors = {
@@ -479,10 +492,10 @@ public class MapsActivity extends FragmentActivity implements OnMapReadyCallback
                         List<WeightedLatLng> list = null;
 
                         list = new ArrayList<WeightedLatLng>();
-                        String[] latitudes = heatmap.getLatitudes();
-                        String[] longitudes = heatmap.getLongitudes();
-                        String[] values = heatmap.getValues();
-                        String[] postCodes = heatmap.getPostCodes();
+                        latitudes = heatmap.getLatitudes();
+                        longitudes = heatmap.getLongitudes();
+                        values = heatmap.getValues();
+                        postCodes = heatmap.getPostCodes();
                         mMap.animateCamera(CameraUpdateFactory.newLatLng(new LatLng(Double.parseDouble(latitudes[0]),Double.parseDouble(longitudes[0]))));
                         for (int i = 0; i < latitudes.length; i++) {
                             double lat = Double.parseDouble(latitudes[i]);
