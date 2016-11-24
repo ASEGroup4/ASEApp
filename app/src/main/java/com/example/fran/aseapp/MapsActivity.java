@@ -88,10 +88,6 @@ public class MapsActivity extends FragmentActivity implements OnMapReadyCallback
     private HeatmapTileProvider mProvider;
     private TileOverlay mOverlay;
 
-    String[] latitudes;
-    String[] longitudes;
-    String[] values;
-    String[] postCodes;
 
     private PendingIntent pendingIntent;
     private AlarmManager manager;
@@ -180,7 +176,7 @@ public class MapsActivity extends FragmentActivity implements OnMapReadyCallback
         Calendar c = Calendar.getInstance();
         SimpleDateFormat sdf = new SimpleDateFormat("dd/mm/yyyy hh:mm:ss");
         String strDate = sdf.format(c.getTime());
-        Toast.makeText(this, strDate, Toast.LENGTH_SHORT).show();
+        //Toast.makeText(this, strDate, Toast.LENGTH_SHORT).show();
 
     }
 
@@ -212,19 +208,13 @@ public class MapsActivity extends FragmentActivity implements OnMapReadyCallback
         }
 
         iconGenerator = new IconGenerator(getApplicationContext());
-        //checking zoom level
+
         GoogleMap.OnCameraChangeListener cameraChangeListener = new GoogleMap.OnCameraChangeListener() {
             @Override
             public void onCameraChange(CameraPosition cameraPosition) {
                 zoomLevel = mMap.getCameraPosition().zoom;
                 System.out.println("CURRENT ZOOM LEVEL = " + zoomLevel);
                 if(zoomLevel > 17) {
-                    //if zoom level at street level. add markers to house prices.
-                    for (int i = 0; i < latitudes.length; i++) {
-                        mMap.addMarker(new MarkerOptions()
-                                .position(new LatLng( Double.parseDouble(latitudes[i]),  Double.parseDouble(longitudes[i])))
-                                .title("Value: "+  Double.parseDouble(values[i])));
-                    }
                     System.out.println("zoomed way the fuck in mate");
                 }else if (zoomLevel < 10){
                     System.out.println("showing citiesW");
@@ -372,10 +362,6 @@ public class MapsActivity extends FragmentActivity implements OnMapReadyCallback
         }
     }
 
-    //starts an alarm which launches a new intent every set interval. redundant now.
-    //this code code be placed in the on location changed method. if it worked.
-    //that way the location would be sent to the database everytime it changed. rather than using
-    // a set interval
     public void startAlarm() {
         manager = (AlarmManager) getSystemService(Context.ALARM_SERVICE);
         int interval = 30000;
@@ -388,14 +374,11 @@ public class MapsActivity extends FragmentActivity implements OnMapReadyCallback
         manager.setRepeating(AlarmManager.RTC_WAKEUP, System.currentTimeMillis(), interval, pendingIntent);
     }
 
-    //testable heatmap method. do not use this one for changing app functionality
+
     private void addHeatMapTestable(double lat, double lon, String mockJson){
         double latitude = lat;
         final double longitude = lon;
-
-
-             String JSON_URL = "http://users.sussex.ac.uk/~dil20/heatmap.php?latitude=" + latitude + "&longitude=" + longitude;
-
+        String JSON_URL = "http://users.sussex.ac.uk/~dil20/heatmap.php?latitude=" + latitude + "&longitude=" + longitude;
         StringRequest stringRequest = new StringRequest(JSON_URL,
                 new Response.Listener<String>() {
                     @Override
@@ -416,8 +399,6 @@ public class MapsActivity extends FragmentActivity implements OnMapReadyCallback
                         String[] values = heatmap.getValues();
                         String[] postCodes = heatmap.getPostCodes();
                         for (int i = 0; i < latitudes.length; i++) {
-
-
                             double lat = Double.parseDouble(latitudes[i]);
                             double lng = Double.parseDouble(longitudes[i]);
                             double val = Double.parseDouble(values[i]);
@@ -425,8 +406,6 @@ public class MapsActivity extends FragmentActivity implements OnMapReadyCallback
                             LatLng latLong = new LatLng(lat, lng);
 
                             list.add(new WeightedLatLng(latLong, i));
-
-
                         }
 
                         int[] colors = {
@@ -475,21 +454,12 @@ public class MapsActivity extends FragmentActivity implements OnMapReadyCallback
     public void addHeatMapPublic(double lat, double lon){
         addHeatMap(lat, lon);
     }
-
-
-
-
     //creates heatmap in conjunction with heatmap data class
-    //sends a request to server to get postcode information
-    //postcode information gathered as a json file in the "on response" method which waits for the data
-    //heatmap class decodes the Json file
-    //this data is then added to a heatmap list of lats, longs, vals and postcodes
-    //google heatmap api created the visuals
     private void addHeatMap(double lat, double lon) {
-        final double latitude = lat;
+
+        double latitude = lat;
         final double longitude = lon;
-        Log.d("PCODE",MenuActivity.postcode);
-        String JSON_URL = "http://users.sussex.ac.uk/~dil20/heatmap.php?latitude=" + latitude + "&longitude=" + longitude+ "&postcode=" +MenuActivity.postcode;
+        String JSON_URL = "http://users.sussex.ac.uk/~dil20/heatmap.php?latitude=" + latitude + "&longitude=" + longitude;
         StringRequest stringRequest = new StringRequest(JSON_URL,
                 new Response.Listener<String>() {
                     @Override
@@ -505,19 +475,17 @@ public class MapsActivity extends FragmentActivity implements OnMapReadyCallback
                         List<WeightedLatLng> list = null;
 
                         list = new ArrayList<WeightedLatLng>();
-                        latitudes = heatmap.getLatitudes();
-                        longitudes = heatmap.getLongitudes();
-                        values = heatmap.getValues();
-                        postCodes = heatmap.getPostCodes();
-
-                        //moves the camera to current postcode
-                        mMap.animateCamera(CameraUpdateFactory.newLatLng(new LatLng(Double.parseDouble(latitudes[0]),Double.parseDouble(longitudes[0]))));
+                        String[] latitudes = heatmap.getLatitudes();
+                        String[] longitudes = heatmap.getLongitudes();
+                        String[] values = heatmap.getValues();
+                        String[] postCodes = heatmap.getPostCodes();
                         for (int i = 0; i < latitudes.length; i++) {
                             double lat = Double.parseDouble(latitudes[i]);
                             double lng = Double.parseDouble(longitudes[i]);
                             double val = Double.parseDouble(values[i]);
                             System.out.println("PostCodes: " + postCodes[i] + " val: " + val);
                             LatLng latLong = new LatLng(lat, lng);
+
                             list.add(new WeightedLatLng(latLong, i));
                         }
 
@@ -543,7 +511,6 @@ public class MapsActivity extends FragmentActivity implements OnMapReadyCallback
                         Gradient gradient = new Gradient(colors, startPoints);
                         //Gradient gradient = new Gradient(oldColors, startPoints);
 
-                        //builds heatmap using google api
                         mProvider = new HeatmapTileProvider.Builder()
                                 .weightedData(list)
                                 .gradient(gradient)

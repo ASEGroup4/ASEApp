@@ -20,8 +20,7 @@ public class AlarmReceiver extends BroadcastReceiver {
         locationLong = MapsActivity.mLastLocation.getLongitude();
 
         // For our recurring task, we'll just display a message
-        Toast.makeText(arg0, "longitude: "+locationLong+" lattitude: "+ locationLat
-               , Toast.LENGTH_SHORT).show();
+        //Toast.makeText(arg0, "longitude: "+locationLong+" lattitude: "+ locationLat, Toast.LENGTH_SHORT).show();
         Log.d("Locations","Writing location to Toast");
         Intent sendLocation = new Intent(arg0, ContactServer.class);
 

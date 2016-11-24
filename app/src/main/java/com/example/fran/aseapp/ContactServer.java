@@ -6,7 +6,6 @@ import android.icu.text.SimpleDateFormat;
 import android.icu.util.Calendar;
 import android.provider.Settings;
 import android.util.Log;
-import android.widget.Toast;
 import android.provider.Settings.Secure;
 import java.net.*;
 import java.io.*;

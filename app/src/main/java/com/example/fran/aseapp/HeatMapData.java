@@ -3,7 +3,6 @@ package com.example.fran.aseapp;
 import android.content.Context;
 import android.provider.Settings;
 import android.util.Log;
-import android.widget.Toast;
 
 import com.android.volley.RequestQueue;
 import com.android.volley.Response;
