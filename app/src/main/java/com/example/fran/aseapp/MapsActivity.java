@@ -152,6 +152,8 @@ public class MapsActivity extends FragmentActivity implements OnMapReadyCallback
             /*
             we need the onHanldeIntent (ContactServer.java) to get strDate and android ID
             */
+            String strDate = "";
+            String android_id = "";    
             String urlString = "http://users.sussex.ac.uk/~fs264/HeatmAPP/recordLog.php?dateTime=" + strDate + "&errorType=" + errorType + "&UserID=" + android_id;
             try {
                 URL url = new URL(urlString);
