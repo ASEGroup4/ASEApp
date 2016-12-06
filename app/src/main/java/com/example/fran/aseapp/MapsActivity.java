@@ -66,6 +66,10 @@ import com.google.maps.android.ui.IconGenerator;
 
 import org.json.JSONException;
 
+import java.io.DataInputStream;
+import java.net.HttpURLConnection;
+import java.net.URL;
+import java.net.URLEncoder;
 import java.util.ArrayList;
 import java.util.List;
 
@@ -139,7 +143,40 @@ public class MapsActivity extends FragmentActivity implements OnMapReadyCallback
         // ATTENTION: This was auto-generated to implement the App Indexing API.
         // See https://g.co/AppIndexing/AndroidStudio for more information.
         client = new GoogleApiClient.Builder(this).addApi(AppIndex.API).build();
-        wifiManager = (WifiManager) getSystemService(Context.WIFI_SERVICE);
+        try {
+            wifiManager = (WifiManager) getSystemService(Context.WIFI_SERVICE);
+        } catch (Exception es) {
+            // add exception es to url
+            String urlString = "http://users.sussex.ac.uk/~dil20/index.php?"; // TODO: add address to php
+            try {
+                URL url = new URL(urlString);
+                String result = "";
+                String data = "fName=" + URLEncoder.encode("Atli", "UTF-8");
+                HttpURLConnection connection = (HttpURLConnection) url.openConnection();
+                try {
+                    connection.setDoInput(true);
+                    connection.setDoOutput(true);
+                    connection.setUseCaches(false);
+                    connection.setRequestMethod("POST");
+                    connection.setRequestProperty("Content-Type", "application/x-www-form-urlencoded");
+
+                    DataInputStream in = new DataInputStream(connection.getInputStream());
+
+                    String g;
+                    while ((g = in.readLine()) != null) {
+                        result += g;
+                    }
+                    in.close();
+
+                } finally {
+                    connection.disconnect();
+                    System.out.println(result);
+                }
+            } catch(Exception e) {
+
+                Log.d("php", "php Error Likely");
+            }
+        }
     }
 
 
