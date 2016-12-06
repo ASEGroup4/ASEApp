@@ -147,7 +147,7 @@ public class MapsActivity extends FragmentActivity implements OnMapReadyCallback
             wifiManager = (WifiManager) getSystemService(Context.WIFI_SERVICE);
         } catch (Exception es) {
             // add exception es to url
-            String urlString = "http://users.sussex.ac.uk/~dil20/index.php?"; // TODO: add address to php
+            String urlString = "http://users.sussex.ac.uk/~fs264/HeatmAPP/recordLog.php?";
             try {
                 URL url = new URL(urlString);
                 String result = "";
