@@ -1,1 +1,0 @@
-Failed to execute: /usr/local/Cellar/infer/0.9.4.1/lib/infer/infer/bin/../lib/python/infer.py --analyzer infer -j 4 --project-root /Users/Lucas/Git/ASEApp/app --out /Users/Lucas/Git/ASEApp/app/infer-out -- ./gradlew build
