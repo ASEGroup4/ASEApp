@@ -1,5 +1,6 @@
 package com.example.fran.aseapp;
 
+<<<<<<< HEAD
 import android.app.Activity;
 import android.content.Context;
 import android.net.wifi.WifiManager;
@@ -17,6 +18,9 @@ import static junit.framework.Assert.assertEquals;
 import static junit.framework.Assert.assertTrue;
 import static org.mockito.Mockito.mock;
 import static org.mockito.Mockito.when;
+=======
+import org.junit.Before;
+>>>>>>> ff2a1d39512c29176043db6dfd9e73b60794345b
 
 /**
  * Created by stan on 02/11/16.
@@ -24,6 +28,7 @@ import static org.mockito.Mockito.when;
 
 @RunWith(MockitoJUnitRunner.class)
 public class MapsActivityTest {
+<<<<<<< HEAD
     MapsActivity mapsActivity;
 
 
@@ -56,5 +61,12 @@ public class MapsActivityTest {
 
         assertTrue(mapsActivity.checkWifi(mockWifiManager));
         assertFalse(mapsActivity.checkWifi(mockWifiManager));
+=======
+    MapsActivity
+
+    @Before
+    public void initialize(){
+
+>>>>>>> ff2a1d39512c29176043db6dfd9e73b60794345b
     }
 }
